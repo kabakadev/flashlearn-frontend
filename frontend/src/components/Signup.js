@@ -20,4 +20,5 @@ const Signup = () => {
       console.error('Signup failed', error); 
     }
   };
+  return()
 }
