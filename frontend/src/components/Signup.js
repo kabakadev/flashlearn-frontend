@@ -36,5 +36,11 @@ const Signup = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
   )
 }
