@@ -7,4 +7,5 @@ const Signup = () => {
     const [password, setPassword] = useState('');
 
     const handleSignup = async (e) => {
+        e.preventDefault();
 }
