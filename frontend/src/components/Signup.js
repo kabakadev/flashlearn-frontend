@@ -20,5 +20,14 @@ const Signup = () => {
       console.error('Signup failed', error); 
     }
   };
-  return()
+  return(
+    <div>
+      <h2>Signup</h2>
+      <form onSubmit={handleSignup}></form>
+        <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+  )
 }
