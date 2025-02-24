@@ -6,5 +6,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    const handleLogin = async (e) => {}
+    const handleLogin = async (e) => {
+        e.preventDefault();
+    }
 }
