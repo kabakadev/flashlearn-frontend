@@ -15,4 +15,9 @@ const Signup = () => {
               email,
               password,
             });
+            console.log('Signup success:', response.data);
+    } catch (error) {
+      console.error('Signup failed', error); 
+    }
+  };
 }
