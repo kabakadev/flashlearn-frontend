@@ -42,5 +42,10 @@ const Signup = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-  )
-}
+         <button type="submit">Signup</button>
+        </form>
+    </div>
+  );
+};
+
+export default Signup;
