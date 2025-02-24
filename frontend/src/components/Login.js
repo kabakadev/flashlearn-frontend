@@ -14,6 +14,7 @@ const Login = () => {
                 email,
                 password
             });
+            console.log('Logged in:', response.data);
         }
     }
 }
