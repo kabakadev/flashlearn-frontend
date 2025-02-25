@@ -1,32 +1,34 @@
 import { useState } from "react";
 
-const Login = () => {
+const Register = () => {
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setError(null);
+    setSuccess(null);
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/auth/login", {
+      const response = await fetch("http://127.0.0.1:5000/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, username, password }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Login failed");
+        throw new Error(data.message || "Registration failed");
       }
 
-      // Save token to localStorage
-      localStorage.setItem("token", data.access_token);
-      console.log("Login successful:", data);
+      setSuccess("Registration successful! You can now log in.");
+      console.log("Registration successful:", data);
     } catch (error) {
       setError(error.message);
     }
@@ -34,14 +36,22 @@ const Login = () => {
 
   return (
     <div>
-      <h2>Login</h2>
+      <h2>Register</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleLogin}>
+      {success && <p style={{ color: "green" }}>{success}</p>}
+      <form onSubmit={handleRegister}>
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           required
         />
         <input
@@ -51,10 +61,10 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default Register;
