@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const Homepage = (){
+const Homepage = () => {
     return(
         <div>
            <h1> Welcomee to FlashLearnnn!!!!!</h1>
