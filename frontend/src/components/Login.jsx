@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useUser } from "../context/UserContext"; 
+import { useUser } from "./UserContext";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
-    const { setIsAuthenticated } = useUser();
-    
+    const { setIsAuthenticated, setUser } = useUser();
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
@@ -28,8 +27,8 @@ const Login = () => {
             }
 
             localStorage.setItem("token", data.access_token);
+            setUser({ username: data.username }); 
             setIsAuthenticated(true);
-
             navigate("/dashboard");
         } catch (error) {
             setError(error.message);
@@ -40,6 +39,7 @@ const Login = () => {
         <div>
             <h2>Login</h2>
             {error && <p style={{ color: "red" }}>{error}</p>}
+
             <form onSubmit={handleLogin}>
                 <input
                     type="email"
