@@ -5,7 +5,7 @@ const UserContext = createContext();
 export const UserProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(null);  // ✅ Define setUser
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -28,13 +28,8 @@ export const UserProvider = ({ children }) => {
                 }
 
                 const data = await response.json();
-
-                if (data.username) { 
-                    setUser(data); // ✅ Store full user object
-                    setIsAuthenticated(true);
-                } else {
-                    setIsAuthenticated(false);
-                }
+                setUser(data); // ✅ Fix: Correctly set user
+                setIsAuthenticated(true);
             } catch (error) {
                 console.error("Error fetching user:", error);
                 setIsAuthenticated(false);

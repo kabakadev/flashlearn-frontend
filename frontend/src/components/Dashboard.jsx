@@ -13,17 +13,13 @@ const Dashboard = () => {
     }, [isAuthenticated, loading, navigate]);
 
     if (loading) {
-        return <p>Loading......</p>;
+        return <p>Loading...</p>;
     }
 
     return (
         <div>
             <h2>Dashboard</h2>
-            {user && user.username ? (
-                <p>Welcome, {user.username}!</p> 
-            ) : (
-                <p>No user data available</p> 
-            )}
+            {user ? <p>Welcome, {user.username}!</p> : <p>No user data available</p>}
         </div>
     );
 };
