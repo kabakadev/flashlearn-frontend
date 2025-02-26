@@ -27,7 +27,7 @@ const Login = () => {
             }
 
             localStorage.setItem("token", data.access_token);
-            setUser({ username: data.username }); 
+            setUser(data.user); 
             setIsAuthenticated(true);
             navigate("/dashboard");
         } catch (error) {
