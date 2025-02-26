@@ -40,3 +40,12 @@ export const UserProvider = ({ children }) => {}
     
         fetchUser();
       }, []);
+
+      return (
+        <UserContext.Provider value={{ isAuthenticated, setIsAuthenticated, loading, user }}
+        >
+          {children}
+        </UserContext.Provider>
+      );
+    
+      
