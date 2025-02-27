@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useUser } from "./UserContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Dashboard = () => {
     const { user, isAuthenticated, loading } = useUser();
@@ -12,14 +12,16 @@ const Dashboard = () => {
         }
     }, [isAuthenticated, loading, navigate]);
 
-    if (loading) {
-        return <p>Loading...</p>;
-    }
+    if (loading) return <p>Loading...</p>;
 
     return (
         <div>
             <h2>Dashboard</h2>
             {user ? <p>Welcome, {user.username}!</p> : <p>No user data available</p>}
+            <br />
+            <Link to="/decks">
+                <button>View Your Decks</button>
+            </Link>
         </div>
     );
 };
