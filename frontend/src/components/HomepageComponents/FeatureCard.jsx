@@ -8,23 +8,13 @@ export default function FeatureCard({ Icon, title, description }) {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
 
-  // Custom icon background colors based on theme
-  const iconBgColor = isDarkMode
-    ? "rgba(124, 58, 237, 0.15)" // Subtle purple in dark mode
-    : "rgba(124, 58, 237, 0.08)"; // Very light purple in light mode
-
-  const iconColor = theme.palette.primary.main;
-
   return (
-    <motion.div
-      whileHover={{ scale: 1.02, y: -5 }}
-      transition={{ duration: 0.2 }}
-    >
+    <motion.div whileHover={{ scale: 1.02, y: -5 }} transition={{ duration: 0.2 }}>
       <Card
         sx={{
           bgcolor: "background.paper",
           height: "100%",
-          transition: "all 0.3s ease",
+          transition: "0.3s ease",
           boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
           "&:hover": {
             boxShadow: "0 12px 24px rgba(0,0,0,0.1)",
@@ -32,57 +22,27 @@ export default function FeatureCard({ Icon, title, description }) {
           },
         }}
       >
-        <CardContent
-          sx={{
-            p: 4,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 2,
-          }}
-        >
+        <CardContent sx={{ p: 4, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
           <Box
             sx={{
-              backgroundColor: iconBgColor,
-              padding: "12px",
-              borderRadius: "12px",
+              bgcolor: isDarkMode ? "rgba(124,58,237,0.15)" : "rgba(124,58,237,0.08)",
+              p: 1.5,
+              borderRadius: 2,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              width: "48px",
-              height: "48px",
+              width: 48,
+              height: 48,
               mb: 2,
-              boxShadow: isDarkMode
-                ? "none"
-                : "0 4px 8px rgba(124, 58, 237, 0.1)",
+              boxShadow: isDarkMode ? "none" : "0 4px 8px rgba(124,58,237,0.1)",
             }}
           >
-            <Icon
-              style={{
-                color: iconColor,
-                strokeWidth: 2.5,
-              }}
-            />
+            <Icon style={{ color: theme.palette.primary.main, strokeWidth: 2.5 }} />
           </Box>
-          <Typography
-            variant="h6"
-            sx={{
-              color: "text.primary",
-              fontWeight: 600,
-              textAlign: "center",
-              mb: 1,
-            }}
-          >
+          <Typography variant="h6" sx={{ color: "text.primary", fontWeight: 600, textAlign: "center", mb: 1 }}>
             {title}
           </Typography>
-          <Typography
-            variant="body2"
-            sx={{
-              color: "text.secondary",
-              textAlign: "center",
-              lineHeight: 1.6,
-            }}
-          >
+          <Typography variant="body2" sx={{ color: "text.secondary", textAlign: "center", lineHeight: 1.6 }}>
             {description}
           </Typography>
         </CardContent>
