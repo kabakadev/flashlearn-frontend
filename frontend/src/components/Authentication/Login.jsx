@@ -1,7 +1,7 @@
 "use client";
 
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import { useUser } from "../context/UserContext";
+import { useUser } from "../Context/UserContext";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import {
