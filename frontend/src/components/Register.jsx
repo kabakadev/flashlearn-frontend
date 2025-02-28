@@ -1,51 +1,181 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+"use client";
+
+import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { useUser } from "../../context/UserContext";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import { Container, Card, CardContent, Typography, TextField, Button, Link, Box, Alert } from "@mui/material";
+import { motion } from "framer-motion";
+import ThemeToggle from "../../ThemeComponents/ThemeToggle";
+
+const validationSchema = Yup.object({
+  email: Yup.string().email("Invalid email address").required("Email is required"),
+  username: Yup.string().min(3, "Username must be at least 3 characters").required("Username is required"),
+  password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+});
 
 const Register = () => {
-    const [email, setEmail] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
+  const { signup } = useUser();
+  const navigate = useNavigate();
 
-    const handleRegister = async (e) => {
-        e.preventDefault();
-        setError(null);
-        setSuccess(null);
+  return (
+    <Container
+      component="main"
+      maxWidth="sm"
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        py: 4,
+      }}
+    >
+      <Box sx={{ position: "absolute", top: 16, right: 16 }}>
+        <ThemeToggle />
+      </Box>
 
-        try {
-            const response = await fetch("http://127.0.0.1:5000/auth/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, username, password }),
-            });
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+        <Card
+          sx={{
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            boxShadow: (theme) =>
+              theme.palette.mode === "dark"
+                ? "0 0 0 1px rgba(59, 130, 246, 0.5)"
+                : "0 0 0 1px rgba(152, 245, 225, 0.5)",
+          }}
+        >
+          <CardContent sx={{ p: 4 }}>
+            <Box sx={{ mb: 3, textAlign: "center" }}>
+              <Typography
+                component="h1"
+                variant="h4"
+                sx={{
+                  fontWeight: "bold",
+                  color: "text.primary",
+                  mb: 1,
+                }}
+              >
+                Create Account
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "text.secondary",
+                }}
+              >
+                Join Flashlearn and start your learning journey
+              </Typography>
+            </Box>
 
-            const data = await response.json();
+            <Formik
+              initialValues={{ email: "", username: "", password: "" }}
+              validationSchema={validationSchema}
+              onSubmit={async (values, { setSubmitting, setErrors }) => {
+                try {
+                  const success = await signup(values.email, values.username, values.password);
+                  if (success) {
+                    navigate("/dashboard");
+                  }
+                } catch (error) {
+                  setErrors({ general: error.message || "Signup failed" });
+                }
+                setSubmitting(false);
+              }}
+            >
+              {({ isSubmitting, errors, touched, handleChange, handleBlur, values }) => (
+                <Form>
+                  {errors.general && (
+                    <Alert severity="error" sx={{ mb: 2 }}>
+                      {errors.general}
+                    </Alert>
+                  )}
 
-            if (!response.ok) {
-                throw new Error(data.message || "Registration failed");
-            }
+                  <TextField
+                    fullWidth
+                    id="email"
+                    name="email"
+                    label="Email"
+                    value={values.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.email && Boolean(errors.email)}
+                    helperText={touched.email && errors.email}
+                    sx={{ mb: 2 }}
+                  />
 
-            setSuccess("Registration successful! You can now log in.");
-        } catch (error) {
-            setError(error.message);
-        }
-    };
+                  <TextField
+                    fullWidth
+                    id="username"
+                    name="username"
+                    label="Username"
+                    value={values.username}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.username && Boolean(errors.username)}
+                    helperText={touched.username && errors.username}
+                    sx={{ mb: 2 }}
+                  />
 
-    return (
-        <div>
-            <h2>Register</h2>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            {success && <p style={{ color: "green" }}>{success}</p>}
-            <form onSubmit={handleRegister}>
-                <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                <button type="submit">Register</button>
-            </form>
-            <p>Already have an account? <Link to="/login">Login here</Link></p>
-        </div>
-    );
+                  <TextField
+                    fullWidth
+                    id="password"
+                    name="password"
+                    label="Password"
+                    type="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.password && Boolean(errors.password)}
+                    helperText={touched.password && errors.password}
+                    sx={{ mb: 3 }}
+                  />
+
+                  <Button
+                    component={motion.button}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    fullWidth
+                    size="large"
+                    variant="contained"
+                    type="submit"
+                    disabled={isSubmitting}
+                    sx={{
+                      bgcolor: (theme) => (theme.palette.mode === "dark" ? "#3b82f6" : "#ffd4f7"),
+                      color: (theme) => (theme.palette.mode === "dark" ? "white" : "text.primary"),
+                      "&:hover": {
+                        bgcolor: (theme) => (theme.palette.mode === "dark" ? "#2563eb" : "#ffc4e7"),
+                      },
+                      mb: 2,
+                    }}
+                  >
+                    {isSubmitting ? "Creating account..." : "Create account"}
+                  </Button>
+
+                  <Typography variant="body2" align="center" sx={{ color: "text.secondary" }}>
+                    Already have an account?{" "}
+                    <Link
+                      component={RouterLink}
+                      to="/login"
+                      sx={{
+                        color: (theme) => (theme.palette.mode === "dark" ? "#3b82f6" : "#ff01f0"),
+                        textDecoration: "none",
+                        "&:hover": {
+                          textDecoration: "underline",
+                        },
+                      }}
+                    >
+                      Sign in here
+                    </Link>
+                  </Typography>
+                </Form>
+              )}
+            </Formik>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </Container>
+  );
 };
 
 export default Register;
