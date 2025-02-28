@@ -3,11 +3,11 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "./components/ThemeComponents/ThemeProvider";
 import { useTheme } from "./components/ThemeComponents/ThemeProvider";
 import { theme as lightTheme, darkTheme } from "./Theme";
-import Homepage from "./components/HomepageComponents/Homepage"; // Corrected import
+import Homepage from "./Homepage"; // Corrected import
 import Login from "./components/Authentication/Login";
 import Signup from "./components/Authentication/SignUp";
 import WelcomeSection from "./components/Dashboard/WelcomeSection";
-import MyDecks from "./components/HomepageComponents/MyDecks";
+import MyDecks from "./MyDecks";
 import DeckView from "./components/DeckView/DeckView";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
