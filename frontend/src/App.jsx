@@ -1,23 +1,32 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { UserProvider } from "./components/UserContext"; // ✅ Wrap the app with UserProvider
-import Login from "./components/Login";
-import Register from "./components/Register";
+import { ThemeProvider as MUIThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "./components/ThemeComponents/ThemeProvider";
+import { useTheme } from "./components/ThemeComponents/ThemeProvider";
+import { theme as lightTheme, darkTheme } from "./theme";
 import Homepage from "./components/Homepage";
-import Dashboard from "./components/Dashboard"; // ✅ Import Dashboard
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-function App() {
+
+// Wrap the routes with MUI theme provider
+function AppContent() {
+  const { theme } = useTheme();
+
   return (
-    <UserProvider>
+    <MUIThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+      <CssBaseline />
       <Router>
         <Routes>
           <Route path="/" element={<Homepage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} /> {/* ✅ Add Dashboard route */}
         </Routes>
       </Router>
-    </UserProvider>
+    </MUIThemeProvider>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
+  );
+}
