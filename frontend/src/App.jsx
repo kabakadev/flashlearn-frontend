@@ -1,27 +1,42 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { UserProvider } from "./components/UserContext";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import Homepage from "./components/Homepage";
-import Dashboard from "./components/Dashboard";
-import Decks from "./components/Decks";
-import DeckView from "./components/DeckView";
+import { ThemeProvider as MUIThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "./components/ThemeComponents/ThemeProvider";
+import { useTheme } from "./components/ThemeComponents/ThemeProvider";
+import { theme as lightTheme, darkTheme } from "./theme";
+import Homepage from "./components/HomePage";
+import Login from "./components/Authentication/Login";
+import Signup from "./components/Authentication/SignUp";
+import Dashboard from "./components/DashBoard";
 
-function App() {
+import MyDecks from "./components/MyDecks";
+import DeckView from "./components/DeckView/DeckView";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// Wrap the routes with MUI theme provider
+function AppContent() {
+  const { theme } = useTheme();
+
   return (
-    <UserProvider>
+    <MUIThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+      <CssBaseline />
       <Router>
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/decks" element={<Decks />} />
-          <Route path="/decks/:id" element={<DeckView />} />
+          <Route path="/MYdecks" element={<MyDecks />} />
+          <Route path="/mydecks/:deckId" element={<DeckView />} />
         </Routes>
       </Router>
-    </UserProvider>
+    </MUIThemeProvider>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
+  );
+}
