@@ -48,13 +48,20 @@ export const UserProvider = ({ children }) => {
         body: JSON.stringify({ email, username, password }),
       });
 
-      if (!response.ok) throw new Error("Signup failed");
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Signup failed:", data.error);
+        return false;
+      }
+
+      console.log("Signup successful:", data);
 
       // Wait for login to complete
-      const success = await login(email, password);
-      return success;
+      return await login(email, password);
     } catch (error) {
       console.error("Signup error:", error);
+      return false;
     }
   };
 
@@ -68,16 +75,17 @@ export const UserProvider = ({ children }) => {
 
       const data = await response.json();
 
-      if (response.ok) {
-        localStorage.setItem(TOKEN_KEY, data.token);
-        await fetchUser();
-        return true;
-      } else {
-        throw new Error(data.error || "Login failed");
+      if (!response.ok) {
+        console.error("Login failed:", data.error);
+        return false;
       }
+
+      localStorage.setItem(TOKEN_KEY, data.token);
+      await fetchUser();
+      return true;
     } catch (error) {
       console.error("Login error:", error);
-      throw error;
+      return false;
     }
   };
 
