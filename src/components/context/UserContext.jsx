@@ -66,15 +66,15 @@ export const UserProvider = ({ children }) => {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem(TOKEN_KEY, data.token);
-        await fetchUser();
-        return true;
-      } else {
-        throw new Error(data.error || "Login failed");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Login failed");
       }
+
+      const data = await response.json();
+      localStorage.setItem(TOKEN_KEY, data.token);
+      await fetchUser();
+      return true;
     } catch (error) {
       console.error("Login error:", error);
       throw error;
