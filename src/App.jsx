@@ -8,6 +8,7 @@ import Login from "./components/Authentication/Login";
 import Signup from "./components/Authentication/SignUp";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+
 // Wrap the routes with MUI theme provider
 function AppContent() {
   const { theme } = useTheme();
@@ -17,7 +18,7 @@ function AppContent() {
       <CssBaseline />
       <Router>
         <Routes>
-          <Route path="/" element={<Homepage />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
         </Routes>
