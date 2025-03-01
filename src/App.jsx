@@ -4,6 +4,7 @@ import { ThemeProvider } from "./components/ThemeComponents/ThemeProvider";
 import { useTheme } from "./components/ThemeComponents/ThemeProvider";
 import { theme as lightTheme, darkTheme } from "./theme";
 import Homepage from "./components/Homepage";
+import SignUp from "./components/Authentication/SignUp";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
