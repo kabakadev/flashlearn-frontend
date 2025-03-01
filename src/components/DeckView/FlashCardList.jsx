@@ -1,146 +1,113 @@
 "use client";
 
-import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  IconButton,
-  Tooltip,
-} from "@mui/material";
+import { Grid, Card, Typography, Button, Box } from "@mui/material";
 import { motion } from "framer-motion";
-import { Pencil, Trash2, Repeat } from "lucide-react";
+import { Brain, PlayCircle, Plus } from "lucide-react";
+import FlashcardItem from "./FlashcardItem";
 
-const FlashcardItem = ({ flashcard, onEdit, onDelete }) => {
-  const [previewSide, setPreviewSide] = useState("front");
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
 
-  const toggleCardSide = () => {
-    setPreviewSide(previewSide === "front" ? "back" : "front");
-  };
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+    },
+  },
+};
 
-  return (
-    <motion.div whileHover={{ y: -5, transition: { duration: 0.2 } }}>
+const FlashcardList = ({
+  flashcards,
+  onEdit,
+  onDelete,
+  navigate,
+  deckId,
+  onAddFlashcard,
+}) => (
+  <motion.div variants={containerVariants} initial="hidden" animate="visible">
+    {flashcards.length === 0 ? (
       <Card
         sx={{
           borderRadius: 3,
           boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          transition: "all 0.3s ease",
-          "&:hover": {
-            boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
-          },
+          p: 6,
+          textAlign: "center",
+          bgcolor: "background.paper",
         }}
       >
-        <CardContent
+        <Brain size={48} color="primary.main" style={{ marginBottom: 16 }} />
+        <Typography
+          variant="h5"
+          sx={{ color: "text.primary", mb: 2, fontWeight: "bold" }}
+        >
+          No Flashcards Yet
+        </Typography>
+        <Typography variant="body1" sx={{ color: "text.secondary", mb: 4 }}>
+          Create your first flashcard and start learning!
+        </Typography>
+        <Button
+          variant="contained"
+          startIcon={<Plus size={18} />}
+          onClick={onAddFlashcard}
           sx={{
-            p: 0,
-            flexGrow: 1,
-            display: "flex",
-            flexDirection: "column",
+            bgcolor: "primary.main",
+            color: "primary.contrastText",
+            "&:hover": {
+              bgcolor: "primary.dark",
+            },
+            borderRadius: 2,
           }}
         >
-          <Box
-            sx={{
-              p: 3,
-              borderBottom: 1,
-              borderColor: "divider",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                mb: 2,
-              }}
-            >
-              <Typography
-                variant="caption"
-                sx={{
-                  color: "text.secondary",
-                  bgcolor: "background.default",
-                  px: 1,
-                  py: 0.5,
-                  borderRadius: 1,
-                }}
-              >
-                {previewSide === "front" ? "Question" : "Answer"}
-              </Typography>
-              <Tooltip title="Flip card">
-                <IconButton
-                  size="small"
-                  onClick={toggleCardSide}
-                  sx={{
-                    color: "primary.main",
-                    "&:hover": {
-                      bgcolor: "primary.main",
-                      color: "primary.contrastText",
-                    },
-                  }}
-                >
-                  <Repeat size={16} />
-                </IconButton>
-              </Tooltip>
-            </Box>
-            <Typography
-              variant="body1"
-              sx={{
-                color: "text.primary",
-                minHeight: "80px",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              {previewSide === "front"
-                ? flashcard.front_text
-                : flashcard.back_text}
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              p: 2,
-              borderTop: 1,
-              borderColor: "divider",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Box>
-              <Tooltip title="Edit flashcard">
-                <IconButton
-                  size="small"
-                  onClick={() => onEdit(flashcard)}
-                  sx={{
-                    mr: 1,
-                    color: "text.secondary",
-                    "&:hover": { color: "primary.main" },
-                  }}
-                >
-                  <Pencil size={18} />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Delete flashcard">
-                <IconButton
-                  size="small"
-                  onClick={() => onDelete(flashcard.id)}
-                  sx={{
-                    color: "error.main",
-                    "&:hover": { color: "error.dark" },
-                  }}
-                >
-                  <Trash2 size={18} />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          </Box>
-        </CardContent>
+          Create Your First Flashcard
+        </Button>
       </Card>
-    </motion.div>
-  );
-};
+    ) : (
+      <>
+        <Grid container spacing={3}>
+          {flashcards.map((flashcard) => (
+            <Grid item xs={12} sm={6} md={4} key={flashcard.id}>
+              <FlashcardItem
+                flashcard={flashcard}
+                onEdit={onEdit}
+                onDelete={onDelete}
+              />
+            </Grid>
+          ))}
+        </Grid>
 
-export default FlashcardItem;
+        <Box sx={{ mt: 6, textAlign: "center" }}>
+          <Button
+            variant="contained"
+            size="large"
+            startIcon={<PlayCircle size={20} />}
+            onClick={() => navigate(`/study/${deckId}`)}
+            sx={{
+              bgcolor: "primary.main",
+              color: "primary.contrastText",
+              px: 6,
+              py: 1.5,
+              "&:hover": {
+                bgcolor: "primary.dark",
+              },
+              borderRadius: 2,
+            }}
+          >
+            Start Studying
+          </Button>
+        </Box>
+      </>
+    )}
+  </motion.div>
+);
+
+export default FlashcardList;
