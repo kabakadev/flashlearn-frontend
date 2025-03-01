@@ -1,22 +1,25 @@
-"use client"
-
-import { useNavigate, Link as RouterLink } from "react-router-dom"
-import { useUser } from "../context/UserContext"
-import { Formik, Form } from "formik"
-import * as Yup from "yup"
-import { Container, Card, CardContent, Typography, TextField, Button, Link, Box, Alert } from "@mui/material"
-import { motion } from "framer-motion"
-import ThemeToggle from "../ThemeComponents/ThemeToggle"
+import React from "react";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { useUser } from "../context/UserContext";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import { Container, Card, CardContent, Typography, TextField, Button, Link, Box, Alert } from "@mui/material";
+import { motion } from "framer-motion";
+import ThemeToggle from "../ThemeComponents/ThemeToggle";
 
 const validationSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Email is required"),
   username: Yup.string().min(3, "Username must be at least 3 characters").required("Username is required"),
   password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
-})
+});
 
 const Signup = () => {
-  const { signup } = useUser()
-  const navigate = useNavigate()
+  const { signup, loading } = useUser(); // Destructure 'signup' correctly
+  const navigate = useNavigate();
+
+  if (loading) {
+    return <div>Loading...</div>; // Show loading message until user is fetched
+  }
 
   return (
     <Container
@@ -47,23 +50,10 @@ const Signup = () => {
         >
           <CardContent sx={{ p: 4 }}>
             <Box sx={{ mb: 3, textAlign: "center" }}>
-              <Typography
-                component="h1"
-                variant="h4"
-                sx={{
-                  fontWeight: "bold",
-                  color: "text.primary",
-                  mb: 1,
-                }}
-              >
+              <Typography component="h1" variant="h4" sx={{ fontWeight: "bold", color: "text.primary", mb: 1 }}>
                 Create Account
               </Typography>
-              <Typography
-                variant="body1"
-                sx={{
-                  color: "text.secondary",
-                }}
-              >
+              <Typography variant="body1" sx={{ color: "text.secondary" }}>
                 Join Flashlearn and start your learning journey
               </Typography>
             </Box>
@@ -73,14 +63,14 @@ const Signup = () => {
               validationSchema={validationSchema}
               onSubmit={async (values, { setSubmitting, setErrors }) => {
                 try {
-                  const success = await signup(values.email, values.username, values.password)
+                  const success = await signup(values.email, values.username, values.password);
                   if (success) {
-                    navigate("/dashboard")
+                    navigate("/dashboard");
                   }
                 } catch (error) {
-                  setErrors({ general: error.message || "Signup failed" })
+                  setErrors({ general: error.message || "Signup failed" });
                 }
-                setSubmitting(false)
+                setSubmitting(false);
               }}
             >
               {({ isSubmitting, errors, touched, handleChange, handleBlur, values }) => (
@@ -175,7 +165,7 @@ const Signup = () => {
         </Card>
       </motion.div>
     </Container>
-  )
-}
+  );
+};
 
-export default Signup
+export default Signup;
