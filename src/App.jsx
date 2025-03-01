@@ -8,6 +8,7 @@ import Homepage from "./components/HomePage";
 import Login from "./components/Authentication/Login";
 import Signup from "./components/Authentication/SignUp";
 import Dashboard from "./components/Dashboard";
+import NavBar from "./components/NavBar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { UserProvider } from "./components/context/UserContext";
 
