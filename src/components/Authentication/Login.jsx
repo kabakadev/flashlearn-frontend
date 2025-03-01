@@ -1,14 +1,30 @@
+"use client";
+
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useUser } from "../context/UserContext";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Container, Card, CardContent, Typography, Button, Link, Box, Alert, TextField } from "@mui/material";
+import {
+  Container,
+  Card,
+  CardContent,
+  Typography,
+  TextField,
+  Button,
+  Link,
+  Box,
+  Alert,
+} from "@mui/material";
 import { motion } from "framer-motion";
 import ThemeToggle from "../ThemeComponents/ThemeToggle";
 
 const validationSchema = Yup.object({
-  email: Yup.string().email("Invalid email").required("Required"),
-  password: Yup.string().min(6, "Min 6 characters").required("Required"),
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
 });
 
 const Login = () => {
@@ -16,35 +32,162 @@ const Login = () => {
   const navigate = useNavigate();
 
   return (
-    <Container maxWidth="sm" sx={{ minHeight: "100vh", display: "flex", alignItems: "center" }}>
-      <Box sx={{ position: "absolute", top: 16, right: 16 }}><ThemeToggle /></Box>
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-        <Card sx={{ p: 4, borderRadius: 2, boxShadow: 3 }}>
-          <CardContent>
-            <Typography variant="h4" fontWeight="bold" textAlign="center" gutterBottom>Welcome Back</Typography>
-            <Typography variant="body1" textAlign="center" color="text.secondary">Sign in to continue learning</Typography>
+    <Container
+      component="main"
+      maxWidth="sm"
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        py: 4,
+      }}
+    >
+      <Box sx={{ position: "absolute", top: 16, right: 16 }}>
+        <ThemeToggle />
+      </Box>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Card
+          sx={{
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            boxShadow: (theme) =>
+              theme.palette.mode === "dark"
+                ? "0 0 0 1px rgba(59, 130, 246, 0.5)"
+                : "0 0 0 1px rgba(152, 245, 225, 0.5)",
+          }}
+        >
+          <CardContent sx={{ p: 4 }}>
+            <Box sx={{ mb: 3, textAlign: "center" }}>
+              <Typography
+                component="h1"
+                variant="h4"
+                sx={{
+                  fontWeight: "bold",
+                  color: "text.primary",
+                  mb: 1,
+                }}
+              >
+                Welcome Back
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "text.secondary",
+                }}
+              >
+                Sign in to continue learning
+              </Typography>
+            </Box>
+
             <Formik
               initialValues={{ email: "", password: "" }}
               validationSchema={validationSchema}
               onSubmit={async (values, { setSubmitting, setErrors }) => {
                 try {
-                  if (await login(values.email, values.password)) navigate("/dashboard");
+                  const success = await login(values.email, values.password);
+                  if (success) {
+                    navigate("/dashboard");
+                  }
                 } catch (error) {
                   setErrors({ general: error.message || "Login failed" });
                 }
                 setSubmitting(false);
               }}
             >
-              {({ isSubmitting, errors }) => (
+              {({
+                isSubmitting,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                values,
+              }) => (
                 <Form>
-                  {errors.general && <Alert severity="error" sx={{ mb: 2 }}>{errors.general}</Alert>}
-                  <Field as={TextField} fullWidth name="email" label="Email" sx={{ mb: 2 }} />
-                  <Field as={TextField} fullWidth name="password" label="Password" type="password" sx={{ mb: 3 }} />
-                  <Button component={motion.button} whileHover={{ scale: 1.02 }} fullWidth size="large" variant="contained" type="submit" disabled={isSubmitting}>
+                  {errors.general && (
+                    <Alert severity="error" sx={{ mb: 2 }}>
+                      {errors.general}
+                    </Alert>
+                  )}
+
+                  <TextField
+                    fullWidth
+                    id="email"
+                    name="email"
+                    label="Email"
+                    value={values.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.email && Boolean(errors.email)}
+                    helperText={touched.email && errors.email}
+                    sx={{ mb: 2 }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    id="password"
+                    name="password"
+                    label="Password"
+                    type="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.password && Boolean(errors.password)}
+                    helperText={touched.password && errors.password}
+                    sx={{ mb: 3 }}
+                  />
+
+                  <Button
+                    component={motion.button}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    fullWidth
+                    size="large"
+                    variant="contained"
+                    type="submit"
+                    disabled={isSubmitting}
+                    sx={{
+                      bgcolor: (theme) =>
+                        theme.palette.mode === "dark" ? "#3b82f6" : "#ffd4f7",
+                      color: (theme) =>
+                        theme.palette.mode === "dark"
+                          ? "white"
+                          : "text.primary",
+                      "&:hover": {
+                        bgcolor: (theme) =>
+                          theme.palette.mode === "dark" ? "#2563eb" : "#ffc4e7",
+                      },
+                      mb: 2,
+                    }}
+                  >
                     {isSubmitting ? "Signing in..." : "Sign in"}
                   </Button>
-                  <Typography variant="body2" textAlign="center" sx={{ mt: 2 }}>
-                    Don't have an account? <Link component={RouterLink} to="/signup">Sign up here</Link>
+
+                  <Typography
+                    variant="body2"
+                    align="center"
+                    sx={{ color: "text.secondary" }}
+                  >
+                    Don't have an account?{" "}
+                    <Link
+                      component={RouterLink}
+                      to="/signup"
+                      sx={{
+                        color: (theme) =>
+                          theme.palette.mode === "dark" ? "#3b82f6" : "#ff01f0",
+                        textDecoration: "none",
+                        "&:hover": {
+                          textDecoration: "underline",
+                        },
+                      }}
+                    >
+                      Sign up here
+                    </Link>
                   </Typography>
                 </Form>
               )}
