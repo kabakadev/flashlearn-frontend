@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "./context/UserContext";
 import { Box, Container, Grid, useTheme } from "@mui/material";
+import NavBar from "./NavBar";
 import LoadingState from "./Dashboard/LoadingState";
 import WelcomeSection from "./Dashboard/WelcomeSection";
 import ProgressCard from "./Dashboard/ProgressCard";
 import QuickStudyCard from "./Dashboard/QuickStudyCard";
-import LearningTipsCard from "./Dashboard/LearningTipsCard";
+import LearningTipsCard from "./Dashboard/LeadingTipsCard";
 import { calculateStudyStreak, getDeckStats } from "../utils/dashBoardutil";
 import DecksSection from "./Dashboard/DeckSection";
 
