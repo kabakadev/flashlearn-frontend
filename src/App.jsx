@@ -10,7 +10,7 @@ import Signup from "./components/Authentication/SignUp";
 import Dashboard from "./components/Dashboard";
 import NavBar from "./components/NavBar";
 import MyDecks from "./components/MyDecks";
-import DeckView from "./components/DeckView";
+import DeckView from "./components/DeckView/DeckView";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { UserProvider } from "./components/context/UserContext";
 
