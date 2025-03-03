@@ -1,8 +1,6 @@
 import { ThemeProvider as MUIThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider } from "./components/ThemeComponents/ThemeProvider"; 
-import { UserProvider } from "./components/context/UserContext"; // Import UserProvider
-
+import { ThemeProvider } from "./components/ThemeComponents/ThemeProvider";
 import { useTheme } from "./components/ThemeComponents/ThemeProvider";
 import { theme as lightTheme, darkTheme } from "./theme";
 import Homepage from "./components/HomePage";
@@ -41,14 +39,8 @@ function AppContent() {
 
 export default function App() {
   return (
-    <ThemeProvider> 
-      <UserProvider> {/* Wrap AppContent with UserProvider */}
-        <AppContent />
-
-      <UserProvider> {/* Wrap AppContent with UserProvider */}
+    <ThemeProvider>
       <AppContent />
-      </UserProvider>
-      </UserProvider>
     </ThemeProvider>
   );
 }

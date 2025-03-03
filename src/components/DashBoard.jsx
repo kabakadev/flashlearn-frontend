@@ -15,7 +15,7 @@ import NavBar from "./NavBar";
 import WelcomeSection from "./Dashboard/WelcomeSection";
 import ProgressCard from "./Dashboard/ProgressCard";
 import QuickStudyCard from "./Dashboard/QuickStudyCard";
-import LearningTipsCard from "./Dashboard/LearningTipsCard";
+import LearningTipsCard from "./Dashboard/LeadingTipsCard";
 import { calculateStudyStreak, getDeckStats } from "../utils/dashBoardutil";
 import DecksSection from "./Dashboard/DeckSection";
 
