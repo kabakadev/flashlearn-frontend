@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 
-// Updated light theme colors with blue instead of purple
+// Updated light theme colors with pink
 const lightPalette = {
   mode: "light",
   primary: {
@@ -21,7 +21,13 @@ const lightPalette = {
   accent: {
     light: "#f1f5f9", // Slate-100
     medium: "#e2e8f0", // Slate-200
-    highlight: "#3b82f6", // Blue highlight
+    highlight: "#ff69b4", // Pink highlight
+  },
+  sun: {
+    main: "#ff69b4", // Sun color
+  },
+  moon: {
+    main: "#ff85c0", // Moon color
   },
 };
 
@@ -52,7 +58,13 @@ const darkPalette = {
   accent: {
     light: "#334155", // Slate-700
     medium: "#475569", // Slate-600
-    highlight: "#7c3aed", // Purple highlight
+    highlight: "#ff69b4", // Pink highlight
+  },
+  sun: {
+    main: "#ff69b4", // Sun color
+  },
+  moon: {
+    main: "#ff85c0", // Moon color
   },
 };
 
@@ -89,8 +101,8 @@ const commonSettings = {
           "&:hover": {
             backgroundColor: ({ theme }) =>
               theme.palette.mode === "dark"
-                ? "rgba(124, 58, 237, 0.1)"
-                : "rgba(59, 130, 246, 0.1)",
+                ? "rgba(255, 105, 180, 0.1)"
+                : "rgba(255, 105, 180, 0.1)",
           },
         },
       },
