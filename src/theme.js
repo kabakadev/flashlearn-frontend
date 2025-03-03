@@ -4,21 +4,15 @@ import { createTheme } from "@mui/material/styles";
 const lightPalette = {
   mode: "light",
   primary: {
-    main: "#3b82f6", // Bright blue
-    light: "#60a5fa",
-    dark: "#2563eb",
-    contrastText: "#ffffff",
-  },
-  secondary: {
-    main: "#10b981", // Emerald green
-    light: "#34d399",
-    dark: "#059669",
+    main: "#ff69b4", // Hot Pink
+    light: "#ff85c0", // Light Pink
+    dark: "#c71585", // Medium Violet Red
     contrastText: "#ffffff",
   },
   background: {
-    default: "#f8fafc", // Soft background
-    paper: "#ffffff", // Clean white for cards
-    nav: "#f1f5f9", // Light gray for nav
+    default: "#ffffff", // White
+    paper: "#ffeef8", // Light Pink
+    nav: "#fce4ec", // Very Light Pink
   },
   text: {
     primary: "#1e293b", // Slate-900
@@ -31,13 +25,13 @@ const lightPalette = {
   },
 };
 
-// Keep dark theme with purple
+// Keep dark theme with pink
 const darkPalette = {
   mode: "dark",
   primary: {
-    main: "#7c3aed", // Vibrant purple
-    light: "#9d68f2",
-    dark: "#6025c0",
+    main: "#ff69b4", // Hot Pink
+    light: "#ff85c0", // Light Pink
+    dark: "#c71585", // Medium Violet Red
     contrastText: "#ffffff",
   },
   secondary: {
@@ -78,13 +72,13 @@ const commonSettings = {
       styleOverrides: {
         root: {
           textTransform: "none",
-          borderRadius: "8px",
+          borderRadius: "16px", // Increased border radius for rounded buttons
           fontWeight: 600,
         },
         containedPrimary: {
           "&:hover": {
             backgroundColor: ({ theme }) =>
-              theme.palette.mode === "dark" ? "#6025c0" : "#2563eb",
+              theme.palette.mode === "dark" ? "#ff69b4" : "#2563eb", // Added pink for dark mode buttons
           },
         },
       },

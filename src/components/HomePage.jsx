@@ -1,5 +1,5 @@
 import { Box, Container, Divider, useTheme } from "@mui/material";
-import Navbar from "./homepageComponents/NavBar";
+import Navbar from "./homepageComponents/Navbar";
 import HeroSection from "./homepageComponents/HeroSection";
 import FeaturesSection from "./homepageComponents/FeaturesSection";
 import ProgressStatsSection from "./homepageComponents/ProgressStatsSection";
@@ -27,6 +27,7 @@ export default function Homepage() {
         {/* Features Section */}
         <FeaturesSection />
 
+        <Divider sx={{ my: 8 }} />
 
         <Divider sx={{ my: 8 }} />
 
