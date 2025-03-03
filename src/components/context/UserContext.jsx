@@ -66,6 +66,7 @@ export const UserProvider = ({ children }) => {
   };
 
   const login = async (email, password) => {
+    console.log("Login process started for:", email);
     try {
       const response = await fetch(`${API_URL}/login`, {
         method: "POST",
@@ -81,10 +82,12 @@ export const UserProvider = ({ children }) => {
       }
 
       localStorage.setItem(TOKEN_KEY, data.token);
+      console.log("Login successful, token stored.");
       await fetchUser();
       return true;
     } catch (error) {
       console.error("Login error:", error);
+      console.log("Login process failed for:", email);
       return false;
     }
   };
