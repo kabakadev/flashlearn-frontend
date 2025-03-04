@@ -104,6 +104,17 @@ const NavBar = () => {
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Button
+              onClick={handleLogout} // Sign-out button
+              sx={{
+                color: "text.secondary",
+                textTransform: "none",
+                fontSize: "1rem",
+                fontWeight: 400,
+              }}
+            >
+              Sign out
+            </Button>
             <ThemeToggle />
             <IconButton onClick={handleMenuOpen}>
               <Avatar
