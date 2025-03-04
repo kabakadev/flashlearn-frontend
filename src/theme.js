@@ -1,70 +1,76 @@
 import { createTheme } from "@mui/material/styles";
 
-// Updated light theme colors with pink
+// Updated light theme colors
 const lightPalette = {
   mode: "light",
   primary: {
     main: "#ff69b4", // Hot Pink
-    light: "#ff85c0", // Light Pink
-    dark: "#c71585", // Medium Violet Red
+    light: "#ffb6c1", // Light Pink
+    dark: "#ff1493", // Deep Pink
+    contrastText: "#ffffff",
+  },
+  secondary: {
+    main: "#ffcc00", // Yellow
+    light: "#ffff99", // Light Yellow
+    dark: "#ff9900", // Orange
     contrastText: "#ffffff",
   },
   background: {
-    default: "#ffffff", // White
-    paper: "#ffeef8", // Light Pink
-    nav: "#fce4ec", // Very Light Pink
+    default: "#fff0f5", // Lavender Blush
+    paper: "#ffffff", // White
+    nav: "#ffe4e1", // Misty Rose
   },
   text: {
-    primary: "#1e293b", // Slate-900
-    secondary: "#64748b", // Slate-500
+    primary: "#4a148c", // Dark Purple
+    secondary: "#880e4f", // Dark Pink
   },
   accent: {
-    light: "#f1f5f9", // Slate-100
-    medium: "#e2e8f0", // Slate-200
-    highlight: "#ff69b4", // Pink highlight
+    light: "#ffe4e1", // Misty Rose
+    medium: "#ffb6c1", // Light Pink
+    highlight: "#ff69b4", // Hot Pink highlight
   },
   sun: {
-    main: "#ff69b4", // Sun color
+    main: "#ffeb3b", // Yellow
   },
   moon: {
-    main: "#ff85c0", // Moon color
+    main: "#fbc02d", // Dark Yellow
   },
 };
 
-// Keep dark theme with pink
+// Updated dark theme colors
 const darkPalette = {
   mode: "dark",
   primary: {
     main: "#ff69b4", // Hot Pink
-    light: "#ff85c0", // Light Pink
-    dark: "#c71585", // Medium Violet Red
-    contrastText: "#ffffff",
+    light: "#ffb6c1", // Light Pink
+    dark: "#ff1493", // Deep Pink
+    contrastText: "#000000",
   },
   secondary: {
-    main: "#10b981", // Emerald green
-    light: "#34d399",
-    dark: "#059669",
-    contrastText: "#ffffff",
+    main: "#ffcc00", // Yellow
+    light: "#ffff99", // Light Yellow
+    dark: "#ff9900", // Orange
+    contrastText: "#000000",
   },
   background: {
-    default: "#0f172a", // Dark blue-gray background
-    paper: "#1e293b", // Slightly lighter for cards
-    nav: "#1e293b", // Dark nav background
+    default: "#121212", // Dark background
+    paper: "#1e1e1e", // Slightly lighter for cards
+    nav: "#1e1e1e", // Dark nav background
   },
   text: {
-    primary: "#f8fafc",
-    secondary: "#cbd5e1",
+    primary: "#ffffff",
+    secondary: "#ffb6c1", // Light Pink
   },
   accent: {
-    light: "#334155", // Slate-700
-    medium: "#475569", // Slate-600
-    highlight: "#ff69b4", // Pink highlight
+    light: "#37474f", // Dark Gray
+    medium: "#455a64", // Medium Gray
+    highlight: "#ff69b4", // Hot Pink highlight
   },
   sun: {
-    main: "#ff69b4", // Sun color
+    main: "#ffeb3b", // Yellow
   },
   moon: {
-    main: "#ff85c0", // Moon color
+    main: "#fbc02d", // Dark Yellow
   },
 };
 
@@ -90,7 +96,7 @@ const commonSettings = {
         containedPrimary: {
           "&:hover": {
             backgroundColor: ({ theme }) =>
-              theme.palette.mode === "dark" ? "#ff69b4" : "#2563eb", // Added pink for dark mode buttons
+              theme.palette.mode === "dark" ? "#ff1493" : "#ff69b4", // Adjusted hover color
           },
         },
       },
