@@ -13,8 +13,6 @@ import {
   IconButton,
   useTheme,
   Menu,
-  MenuItem,
-  ListItemIcon,
   Divider,
 } from "@mui/material";
 import { LogOut, LayoutDashboard, BookOpen, GraduationCap } from "lucide-react";
@@ -104,17 +102,6 @@ const NavBar = () => {
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Button
-              onClick={handleLogout} // Sign-out button
-              sx={{
-                color: "text.secondary",
-                textTransform: "none",
-                fontSize: "1rem",
-                fontWeight: 400,
-              }}
-            >
-              Sign out
-            </Button>
             <ThemeToggle />
             <IconButton onClick={handleMenuOpen}>
               <Avatar
@@ -129,6 +116,24 @@ const NavBar = () => {
                 {user?.username?.charAt(0).toUpperCase() || "U"}
               </Avatar>
             </IconButton>
+            {user && (
+              <Button
+                onClick={handleLogout}
+                startIcon={<LogOut size={20} />}
+                sx={{
+                color: theme.palette.primary.contrastText,
+                bgcolor: theme.palette.primary.main,
+                "&:hover": {
+                    bgcolor: theme.palette.primary.dark,
+                },
+
+                  textTransform: "none",
+                  fontSize: "1rem",
+                }}
+              >
+                Sign Out
+              </Button>
+            )}
           </Box>
 
           <Menu
@@ -161,12 +166,6 @@ const NavBar = () => {
             </Box>
             <Divider />
             <Divider />
-            <MenuItem onClick={handleLogout} sx={{ color: "error.main" }}>
-              <ListItemIcon>
-                <LogOut size={18} color={theme.palette.error.main} />
-              </ListItemIcon>
-              Sign out
-            </MenuItem>
           </Menu>
         </Toolbar>
       </Container>
