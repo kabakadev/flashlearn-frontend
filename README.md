@@ -4,6 +4,7 @@
 
 - **Ian Kabaka**
 - **Stephanie Njonjo**
+- **John Gaitho**
 
 ## Description
 
