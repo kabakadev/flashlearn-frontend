@@ -1,5 +1,10 @@
 # FlashLearn
 
+## Authors
+
+- **Ian Kabaka**
+- **Stephanie Njonj**
+
 ## Description
 
 FlashLearn is an interactive flashcard-based learning application designed to enhance the study experience. Users can sign in, create decks, add flashcards, and engage in study sessions by flipping flashcards to test their knowledge. The application also supports a dark mode for better usability in different lighting conditions.
