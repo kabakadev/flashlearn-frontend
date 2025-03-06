@@ -3,7 +3,7 @@
 ## Authors
 
 - **Ian Kabaka**
-- **Stephanie Njonj**
+- **Stephanie Njonjo**
 
 ## Description
 
