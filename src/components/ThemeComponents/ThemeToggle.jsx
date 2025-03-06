@@ -45,15 +45,15 @@ export default function ThemeToggle() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: isDark ? "#ff69b4" : "#ff69b4", // Updated to pink
+          backgroundColor: isDark ? "#ff69b4" : "#ff69b4", 
         }}
         animate={{ x: isDark ? 24 : 0 }}
         transition={{ type: "spring", stiffness: 500, damping: 30 }}
       >
         {isDark ? (
-          <Moon className="h-4 w-4 text-pink-200" /> // Updated moon icon color to pink
+          <Moon className="h-4 w-4 text-pink-200" />
         ) : (
-          <Sun className="h-4 w-4 text-pink-200" /> // Updated sun icon color to pink
+          <Sun className="h-4 w-4 text-pink-200" /> 
         )}
       </motion.div>
     </IconButton>

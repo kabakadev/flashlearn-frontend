@@ -124,7 +124,7 @@ const Login = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={touched.email && Boolean(errors.email)}
-                    helperText={touched.email && errors.email}
+                    helperText={touched.email && values.email === "" ? errors.email : ""}
                     sx={{ mb: 2 }}
                   />
 
@@ -138,7 +138,7 @@ const Login = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={touched.password && Boolean(errors.password)}
-                    helperText={touched.password && errors.password}
+                    helperText={touched.password && values.password === "" ? errors.password : ""}
                     sx={{ mb: 3 }}
                   />
 

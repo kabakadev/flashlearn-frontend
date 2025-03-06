@@ -13,8 +13,6 @@ import NotificationSnackbar from "./NotificationSnackbar";
 const Study = () => {
   const { user, isAuthenticated, loading } = useUser();
   const navigate = useNavigate();
-
-  // State variables
   const [decks, setDecks] = useState([]);
   const [userStats, setUserStats] = useState({
     weekly_goal: 50,
@@ -32,14 +30,12 @@ const Study = () => {
     severity: "success",
   });
 
-  // Protect route
   useEffect(() => {
     if (!loading && !isAuthenticated) {
       navigate("/login");
     }
   }, [loading, isAuthenticated, navigate]);
 
-  // Fetch decks and user stats
   useEffect(() => {
     if (isAuthenticated) {
       fetchDecks();
@@ -164,14 +160,10 @@ const Study = () => {
         >
           Study Dashboard
         </Typography>
-
-        {/* Stats Overview */}
         <StatsOverview
           userStats={userStats}
           onUpdateGoalClick={() => setGoalDialogOpen(true)}
         />
-
-        {/* Decks to Study */}
         <Typography variant="h5" sx={{ mb: 3, fontWeight: "bold" }}>
           Your Decks
         </Typography>
@@ -181,8 +173,6 @@ const Study = () => {
           onDeckClick={handleDeckClick}
           onCreateDeckClick={() => navigate("/mydecks")}
         />
-
-        {/* Weekly Goal Dialog */}
         <WeeklyGoalDialog
           open={goalDialogOpen}
           onClose={() => setGoalDialogOpen(false)}
@@ -190,8 +180,6 @@ const Study = () => {
           onWeeklyGoalChange={(newValue) => setNewWeeklyGoal(newValue)}
           onSave={updateWeeklyGoal}
         />
-
-        {/* Snackbar for notifications */}
         <NotificationSnackbar
           open={snackbar.open}
           message={snackbar.message}

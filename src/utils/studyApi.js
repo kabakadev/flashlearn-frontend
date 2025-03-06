@@ -2,8 +2,6 @@ const API_URL = "http://localhost:5000";
 
 export const fetchUserData = async (user) => {
   const token = localStorage.getItem("authToken");
-
-  // Fetch decks
   const decksResponse = await fetch(`${API_URL}/decks`, {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -11,8 +9,6 @@ export const fetchUserData = async (user) => {
   if (!decksResponse.ok) throw new Error("Failed to fetch decks");
   const decksData = await decksResponse.json();
   const decks = Array.isArray(decksData) ? decksData : [];
-
-  // Fetch all progress data
   const progressResponse = await fetch(`${API_URL}/progress`, {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -20,8 +16,6 @@ export const fetchUserData = async (user) => {
   if (!progressResponse.ok) throw new Error("Failed to fetch progress");
   const progressData = await progressResponse.json();
   const progress = Array.isArray(progressData) ? progressData : [];
-
-  // Fetch user stats to get the weekly goal
   const dashboardResponse = await fetch(`${API_URL}/dashboard`, {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -43,7 +37,6 @@ export const fetchUserData = async (user) => {
       weeklyGoal = dashboardData.weekly_goal;
     }
 
-    // Update stats from dashboard data
     stats = {
       mastery_level: Math.round(dashboardData.mastery_level) || 0,
       study_streak: Math.round(dashboardData.study_streak) || 0,

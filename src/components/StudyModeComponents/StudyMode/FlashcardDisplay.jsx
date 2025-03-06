@@ -55,8 +55,6 @@ const FlashcardDisplay = ({
                   Click to reveal answer or press Space
                 </Typography>
               )}
-
-              {/* Card Stats */}
               <Box
                 sx={{
                   position: "absolute",
@@ -92,8 +90,6 @@ const FlashcardDisplay = ({
                   </Box>
                 </Tooltip>
               </Box>
-
-              {/* Mastery Status */}
               {cardProgress.is_learned && (
                 <Box
                   sx={{

@@ -35,8 +35,6 @@ const MyDecks = () => {
   const [deckDifficulty, setDeckDifficulty] = useState(3);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-  // New state for filtering and sorting
   const [filter, setFilter] = useState({
     subject: "",
     category: "",
@@ -57,11 +55,11 @@ const MyDecks = () => {
       try {
         const token = localStorage.getItem("authToken");
         const fetchedDecks = await fetchDecks(token);
-        setDecks(Array.isArray(fetchedDecks) ? fetchedDecks : []); // Ensure decks is always an array
+        setDecks(Array.isArray(fetchedDecks) ? fetchedDecks : []); 
       } catch (error) {
         console.error("Error fetching decks:", error);
         setError("An error occurred while loading decks.");
-        setDecks([]); // Set decks to an empty array if there's an error
+        setDecks([]); 
       } finally {
         setLoading(false);
       }
@@ -104,8 +102,8 @@ const MyDecks = () => {
     if (!window.confirm("Are you sure you want to delete this deck?")) return;
 
     try {
-      await deleteDeck(deckId); // Pass the correct deckId
-      setDecks((prevDecks) => prevDecks.filter((deck) => deck.id !== deckId)); // Update the local state
+      await deleteDeck(deckId); 
+      setDecks((prevDecks) => prevDecks.filter((deck) => deck.id !== deckId)); 
     } catch (error) {
       console.error("Error deleting deck:", error);
       setError("An error occurred while deleting the deck.");
@@ -138,9 +136,9 @@ const MyDecks = () => {
     navigate(`/study/${deckId}`);
   };
 
-  // Memoized filtered and sorted decks
+
   const filteredAndSortedDecks = useMemo(() => {
-    if (!Array.isArray(decks)) return []; // Return an empty array if decks is not an array
+    if (!Array.isArray(decks)) return []; 
 
     return decks
       .filter((deck) => {
@@ -173,7 +171,6 @@ const MyDecks = () => {
       });
   }, [decks, filter, sortBy]);
 
-  // Extract unique subjects and categories for filter options
   const subjects = useMemo(
     () => [...new Set(decks.map((deck) => deck.subject))],
     [decks]
@@ -245,7 +242,7 @@ const MyDecks = () => {
                     onDelete={handleDeleteDeck}
                     onStudy={handleStudyDeck}
                     navigate={navigate}
-                    is_default={deck.is_default} // Pass the is_default flag
+                    is_default={deck.is_default} 
                   />
                 </Grid>
               ))}

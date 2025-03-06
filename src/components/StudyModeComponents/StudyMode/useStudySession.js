@@ -23,14 +23,10 @@ export const useStudySession = (
   });
   const [showSummary, setShowSummary] = useState(false);
   const [deck, setDeck] = useState(null);
-
-  // Fetch deck details, flashcards, and progress
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("authToken");
-
-        // Fetch deck details
         const deckResponse = await fetch(`${API_URL}/decks/${deckId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -38,8 +34,6 @@ export const useStudySession = (
         if (!deckResponse.ok) throw new Error("Failed to fetch deck details");
         const deckData = await deckResponse.json();
         setDeck(deckData);
-
-        // Fetch flashcards
         const flashcardsResponse = await fetch(`${API_URL}/flashcards`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -51,8 +45,6 @@ export const useStudySession = (
           (card) => card.deck_id === Number.parseInt(deckId)
         );
         setFlashcards(deckFlashcards);
-
-        // Fetch progress for this deck
         const progressResponse = await fetch(
           `${API_URL}/progress/deck/${deckId}`,
           {
@@ -115,8 +107,6 @@ export const useStudySession = (
         });
 
         if (!response.ok) throw new Error("Failed to update progress");
-
-        // Update session stats
         setSessionStats((prev) => ({
           ...prev,
           correctAnswers: prev.correctAnswers + (wasCorrect ? 1 : 0),
@@ -124,13 +114,11 @@ export const useStudySession = (
           timeSpent: prev.timeSpent + timeSpent,
         }));
 
-        // Move to next card or show summary
         if (currentFlashcardIndex < flashcards.length - 1) {
           setCurrentFlashcardIndex(currentFlashcardIndex + 1);
           setShowAnswer(false);
-          startTimeRef.current = Date.now(); // Reset timer for next card
+          startTimeRef.current = Date.now(); 
         } else {
-          // Calculate final session stats
           const totalTimeSpent =
             (Date.now() - sessionStartTimeRef.current) / 60000;
           setSessionStats((prev) => ({
@@ -175,8 +163,6 @@ export const useStudySession = (
       });
 
       if (!response.ok) throw new Error("Failed to update progress");
-
-      // Update local progress state
       setProgress((prevProgress) => {
         const updatedProgress = [...prevProgress];
         const index = updatedProgress.findIndex(

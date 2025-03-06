@@ -7,11 +7,9 @@ import { Card, CardContent, Typography, useTheme, Box } from "@mui/material";
 export default function FeatureCard({ Icon, title, description }) {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
-
-  // Custom icon background colors based on theme
   const iconBgColor = isDarkMode
-    ? "rgba(124, 58, 237, 0.15)" // Subtle purple in dark mode
-    : "rgba(124, 58, 237, 0.08)"; // Very light purple in light mode
+    ? "rgba(124, 58, 237, 0.15)" 
+    : "rgba(124, 58, 237, 0.08)"; 
 
   const iconColor = theme.palette.primary.main;
 

@@ -22,7 +22,7 @@ export default function FlashCard({ question, answer }) {
         transition={{ duration: 0.6, ease: "easeInOut" }}
         whileHover={{ scale: 1.02 }}
       >
-        {/* Front of card */}
+        
         <Card
           sx={{
             position: "absolute",
@@ -95,7 +95,6 @@ export default function FlashCard({ question, answer }) {
           </CardContent>
         </Card>
 
-        {/* Back of card */}
         <Card
           sx={{
             position: "absolute",

@@ -20,7 +20,6 @@ const StudyActions = ({
 }) => {
   return (
     <Box sx={{ mt: 4, display: "flex", justifyContent: "center", gap: 2 }}>
-      {/* Navigation Buttons */}
       <Box
         sx={{
           display: "flex",
@@ -51,8 +50,6 @@ const StudyActions = ({
             </IconButton>
           </span>
         </Tooltip>
-
-        {/* Mark as Learned Button */}
         <Tooltip
           title={
             cardProgress.is_learned ? "Already Learned" : "Mark as Learned"
