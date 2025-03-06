@@ -58,8 +58,8 @@ const Login = () => {
             borderRadius: 2,
             boxShadow: (theme) =>
               theme.palette.mode === "dark"
-                ? "0 0 0 1px rgba(59, 130, 246, 0.5)"
-                : "0 0 0 1px rgba(152, 245, 225, 0.5)",
+                ? "0 0 0 1px rgba(0, 0, 0, 0.5)"
+                : "0 0 0 1px rgba(0, 0, 0, 0.1)",
           }}
         >
           <CardContent sx={{ p: 4 }}>
@@ -152,15 +152,13 @@ const Login = () => {
                     type="submit"
                     disabled={isSubmitting}
                     sx={{
-                      bgcolor: (theme) =>
-                        theme.palette.mode === "dark" ? "#3b82f6" : "#ffd4f7",
+                      bgcolor: (theme) => theme.palette.primary.main,
                       color: (theme) =>
                         theme.palette.mode === "dark"
                           ? "white"
                           : "text.primary",
                       "&:hover": {
-                        bgcolor: (theme) =>
-                          theme.palette.mode === "dark" ? "#2563eb" : "#ffc4e7",
+                        bgcolor: (theme) => theme.palette.primary.light,
                       },
                       mb: 2,
                     }}
@@ -178,8 +176,7 @@ const Login = () => {
                       component={RouterLink}
                       to="/signup"
                       sx={{
-                        color: (theme) =>
-                          theme.palette.mode === "dark" ? "#3b82f6" : "#ff01f0",
+                        color: theme => theme.palette.secondary.main,
                         textDecoration: "none",
                         "&:hover": {
                           textDecoration: "underline",
