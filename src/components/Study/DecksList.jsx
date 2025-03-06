@@ -14,11 +14,6 @@ import { BookOpen, AlertCircle, PlayCircle } from "lucide-react";
 
 const DecksList = ({ decks, onDeckClick, onCreateDeckClick }) => {
   const theme = useTheme();
-
-  // Log the decks prop to debug
-  console.log("decks:", decks);
-
-  // Ensure decks is always an array
   const safeDecks = Array.isArray(decks) ? decks : [];
 
   if (safeDecks.length === 0) {

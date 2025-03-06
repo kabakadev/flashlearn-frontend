@@ -39,8 +39,6 @@ const StudyMode = () => {
     handleMarkAsLearned,
     getCardProgress,
   } = useStudySession(deckId, API_URL, startTimeRef, sessionStartTimeRef);
-
-  // Keyboard shortcuts
   useEffect(() => {
     const handleKeyPress = (e) => {
       if (e.key === " " || e.key === "Enter") {
@@ -49,7 +47,6 @@ const StudyMode = () => {
           setShowAnswer(true);
         }
       } else if (e.key === "ArrowRight") {
-        // Next card
         if (showAnswer) {
           handleFlashcardResponse(true);
         } else if (currentFlashcardIndex < flashcards.length - 1) {
@@ -58,7 +55,6 @@ const StudyMode = () => {
           startTimeRef.current = Date.now();
         }
       } else if (e.key === "ArrowLeft") {
-        // Previous card
         if (showAnswer) {
           handleFlashcardResponse(false);
         } else if (currentFlashcardIndex > 0) {

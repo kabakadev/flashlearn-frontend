@@ -9,12 +9,9 @@ const ThemeContext = createContext({
 
 export function ThemeProvider({ children, storageKey = "ui-theme" }) {
   const [theme, setTheme] = useState(() => {
-    // Check localStorage first
     if (typeof window !== "undefined") {
       const savedTheme = localStorage.getItem(storageKey);
       if (savedTheme) return savedTheme;
-
-      // If no saved theme, check system preference
       return window.matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
         : "light";
@@ -34,12 +31,10 @@ export function ThemeProvider({ children, storageKey = "ui-theme" }) {
     }
   }, [theme, storageKey]);
 
-  // Listen for system theme changes
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     const handleChange = (e) => {
-      // Only update if there's no user preference stored
       if (!localStorage.getItem(storageKey)) {
         setTheme(e.matches ? "dark" : "light");
       }

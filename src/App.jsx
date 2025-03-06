@@ -14,7 +14,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Study from "./components/Study/Study";
 import StudyMode from "./components/StudyModeComponents/StudyMode";
 
-// Wrap the routes with MUI theme provider
 function AppContent() {
   const { theme } = useTheme();
 

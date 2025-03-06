@@ -134,7 +134,7 @@ const Dashboard = () => {
 
     setStats({
       total_flashcards_studied: cardsStudiedThisWeek,
-      weekly_goal: weekly_goal, // Use the passed weekly_goal
+      weekly_goal: weekly_goal, 
       study_streak: streak,
       mastery_level:
         totalAttempts > 0

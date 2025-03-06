@@ -20,19 +20,13 @@ export const fetchDeckAndFlashcards = async (deckId) => {
 
   if (!cardsResponse.ok) throw new Error("Failed to fetch flashcards");
   const cardsData = await cardsResponse.json();
-  // Log the cardsData to see what the API is returning
-  console.log("cardsData:", cardsData);
 
-  // Handle the case where the API returns a message instead of an array
   if (cardsData.message === "No flashcards found.") {
-    console.log("No flashcards found for this deck.");
-    return { deckData, flashcardsData: [] }; // Return an empty array for flashcardsData
+    return { deckData, flashcardsData: [] }; 
   }
 
-  // Ensure cardsData is an array before calling filter
   if (!Array.isArray(cardsData)) {
-    console.error("Expected an array of flashcards, but got:", cardsData);
-    return { deckData, flashcardsData: [] }; // Return an empty array for flashcardsData
+    return { deckData, flashcardsData: [] }; 
   }
 
   const flashcardsData = cardsData.filter(
@@ -77,7 +71,6 @@ export const updateFlashcard = async (flashcard) => {
   });
 
   if (!response.ok) throw new Error("Failed to update flashcard");
-  console.log(response);
   return response.json();
 };
 
@@ -118,16 +111,13 @@ export const fetchDecks = async (token) => {
     if (!response.ok) throw new Error("Failed to fetch decks");
 
     const data = await response.json();
-    return Array.isArray(data) ? data : []; // Ensure the response is always an array
+    return Array.isArray(data) ? data : []; 
   } catch (error) {
-    console.error("Error fetching decks:", error);
-    return []; // Return an empty array if there's an error
+    return [];
   }
 };
-// Add this function if it's not already present
 export const deleteDeck = async (deckId) => {
   const token = localStorage.getItem("authToken");
-  console.log("this is the deck Id", deckId);
   const response = await fetch(`${API_URL}/decks/${deckId}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
