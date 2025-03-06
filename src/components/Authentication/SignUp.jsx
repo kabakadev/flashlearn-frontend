@@ -1,161 +1,219 @@
+"use client";
+
+import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { useUser } from "../context/UserContext";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
 import {
-  Grid,
+  Container,
   Card,
   CardContent,
-  Box,
   Typography,
-  Divider,
-  Chip,
-  Paper,
+  TextField,
   Button,
-  useTheme,
+  Link,
+  Box,
+  Alert,
 } from "@mui/material";
-import { BookOpen, AlertCircle, PlayCircle } from "lucide-react";
+import { motion } from "framer-motion";
+import ThemeToggle from "../ThemeComponents/ThemeToggle";
 
-const DecksList = ({ decks, onDeckClick, onCreateDeckClick }) => {
-  const theme = useTheme();
+const validationSchema = Yup.object({
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  username: Yup.string()
+    .min(3, "Username must be at least 3 characters")
+    .required("Username is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+});
 
-  // Log the decks prop to debug
-  console.log("decks:", decks);
-
-  // Ensure decks is always an array
-  const safeDecks = Array.isArray(decks) ? decks : [];
-
-  if (safeDecks.length === 0) {
-    return <EmptyDeckState onCreateDeckClick={onCreateDeckClick} />;
-  }
-
-  return (
-    <Grid container spacing={3}>
-      {safeDecks.map((deck) => {
-        return (
-          <Grid item xs={12} sm={6} md={4} key={deck.id}>
-            <DeckCard deck={deck} onClick={() => onDeckClick(deck.id)} />
-          </Grid>
-        );
-      })}
-    </Grid>
-  );
-};
-
-const DeckCard = ({ deck, onClick }) => {
-  const theme = useTheme();
+const Signup = () => {
+  const { signup } = useUser();
+  const navigate = useNavigate();
 
   return (
-    <Card
+    <Container
+      component="main"
+      maxWidth="sm"
       sx={{
-        height: "100%",
+        minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        borderRadius: 2,
-        transition: "transform 0.2s",
-        "&:hover": {
-          transform: "translateY(-4px)",
-          boxShadow: 4,
-        },
+        justifyContent: "center",
+        py: 4,
       }}
     >
-      <Box
-        sx={{
-          p: 2,
-          bgcolor:
-            theme.palette.mode === "dark" ? "primary.dark" : "primary.light",
-          color: "primary.contrastText",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
+      <Box sx={{ position: "absolute", top: 16, right: 16 }}>
+        <ThemeToggle />
+      </Box>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
       >
-        <Typography variant="h6" fontWeight="bold">
-          {deck.title}
-        </Typography>
-        <BookOpen size={20} />
-      </Box>
-      <CardContent sx={{ flexGrow: 1 }}>
-        <Typography
-          variant="body2"
-          color="text.secondary"
+        <Card
           sx={{
-            mb: 2,
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            height: "40px",
-          }}
-        >
-          {deck.description}
-        </Typography>
-        <Divider sx={{ my: 1.5 }} />
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            mt: 1,
-          }}
-        >
-          <Chip
-            label={deck.subject}
-            size="small"
-            sx={{
-              bgcolor: "accent.light",
-              color: "text.primary",
-              fontWeight: 500,
-            }}
-          />
-        </Box>
-      </CardContent>
-      <Box sx={{ p: 2, borderTop: 1, borderColor: "divider" }}>
-        <Button
-          variant="contained"
-          fullWidth
-          startIcon={<PlayCircle size={18} />}
-          onClick={onClick}
-          sx={{
-            bgcolor: "primary.main",
-            color: "primary.contrastText",
-            "&:hover": {
-              bgcolor: "primary.dark",
-            },
+            bgcolor: "background.paper",
             borderRadius: 2,
+            boxShadow: (theme) =>
+              theme.palette.mode === "dark"
+                ? "0 0 0 1px rgba(0, 0, 0, 0.5)"
+                : "0 0 0 1px rgba(0, 0, 0, 0.1)",
           }}
         >
-          Study Now
-        </Button>
-      </Box>
-    </Card>
+          <CardContent sx={{ p: 4 }}>
+            <Box sx={{ mb: 3, textAlign: "center" }}>
+              <Typography
+                component="h1"
+                variant="h4"
+                sx={{
+                  fontWeight: "bold",
+                  color: "text.primary",
+                  mb: 1,
+                }}
+              >
+                Create Account
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "text.secondary",
+                }}
+              >
+                Join Flashlearn and start your learning journey
+              </Typography>
+            </Box>
+
+            <Formik
+              initialValues={{ email: "", username: "", password: "" }}
+              validationSchema={validationSchema}
+              onSubmit={async (values, { setSubmitting, setErrors }) => {
+                try {
+                  const success = await signup(
+                    values.email,
+                    values.username,
+                    values.password
+                  );
+                  if (success) {
+                    navigate("/dashboard");
+                  }
+                } catch (error) {
+                  setErrors({ general: error.message || "Signup failed" });
+                }
+                setSubmitting(false);
+              }}
+            >
+              {({
+                isSubmitting,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                values,
+              }) => (
+                <Form>
+                  {errors.general && (
+                    <Alert severity="error" sx={{ mb: 2 }}>
+                      {errors.general}
+                    </Alert>
+                  )}
+
+                  <TextField
+                    fullWidth
+                    id="email"
+                    name="email"
+                    label="Email"
+                    value={values.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.email && Boolean(errors.email)}
+                    helperText={touched.email && errors.email}
+                    sx={{ mb: 2 }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    id="username"
+                    name="username"
+                    label="Username"
+                    value={values.username}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.username && Boolean(errors.username)}
+                    helperText={touched.username && errors.username}
+                    sx={{ mb: 2 }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    id="password"
+                    name="password"
+                    label="Password"
+                    type="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.password && Boolean(errors.password)}
+                    helperText={touched.password && errors.password}
+                    sx={{ mb: 3 }}
+                  />
+
+                  <Button
+                    component={motion.button}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    fullWidth
+                    size="large"
+                    variant="contained"
+                    type="submit"
+                    disabled={isSubmitting}
+                    sx={{
+                      bgcolor: (theme) => theme.palette.primary.main,
+                      color: (theme) =>
+                        theme.palette.mode === "dark"
+                          ? "white"
+                          : "text.primary",
+                      "&:hover": {
+                        bgcolor: (theme) => theme.palette.primary.light,
+                      },
+                      mb: 2,
+                    }}
+                  >
+                    {isSubmitting ? "Creating account..." : "Create account"}
+                  </Button>
+
+                  <Typography
+                    variant="body2"
+                    align="center"
+                    sx={{ color: "text.secondary" }}
+                  >
+                    Already have an account?{" "}
+                    <Link
+                      component={RouterLink}
+                      to="/login"
+                      sx={{
+                        color: theme => theme.palette.secondary.main,
+                        textDecoration: "none",
+                        "&:hover": {
+                          textDecoration: "underline",
+                        },
+                      }}
+                    >
+                      Sign in here
+                    </Link>
+                  </Typography>
+                </Form>
+              )}
+            </Formik>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </Container>
   );
 };
 
-const EmptyDeckState = ({ onCreateDeckClick }) => {
-  const theme = useTheme();
-
-  return (
-    <Paper
-      elevation={0}
-      sx={{
-        p: 4,
-        borderRadius: 2,
-        bgcolor: "background.paper",
-        border: 1,
-        borderColor: "divider",
-        textAlign: "center",
-      }}
-    >
-      <AlertCircle size={48} color={theme.palette.text.secondary} />
-      <Typography variant="h6" sx={{ mt: 2 }}>
-        No decks found
-      </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Create your first deck to start studying
-      </Typography>
-      <Button variant="contained" color="primary" onClick={onCreateDeckClick}>
-        Create Deck
-      </Button>
-    </Paper>
-  );
-};
-
-export default DecksList;
+export default Signup;
