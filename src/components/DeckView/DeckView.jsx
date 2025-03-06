@@ -67,7 +67,7 @@ const DeckView = () => {
   }, [deckId, user]);
 
   const handleAddFlashcard = () => {
-    setAddModalOpen(true); // Open the add flashcard modal
+    setAddModalOpen(true); 
   };
 
   const handleSaveFlashcard = async () => {
@@ -128,7 +128,7 @@ const DeckView = () => {
       <Container maxWidth="xl" sx={{ mt: 4 }}>
         <DeckHeader
           deck={deck}
-          onAddFlashcard={handleAddFlashcard} // Pass the handleAddFlashcard function
+          onAddFlashcard={handleAddFlashcard} 
           navigate={navigate}
         />
 
@@ -147,8 +147,8 @@ const DeckView = () => {
           onDelete={handleDeleteFlashcard}
           navigate={navigate}
           deckId={deckId}
-          onAddFlashcard={handleAddFlashcard} // Pass the handleAddFlashcard function
-          is_default={deck?.is_default} // Pass the is_default flag
+          onAddFlashcard={handleAddFlashcard} 
+          is_default={deck?.is_default} 
         />
 
         <EditFlashcardModal

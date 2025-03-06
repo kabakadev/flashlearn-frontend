@@ -7,7 +7,7 @@ import {
   IconButton,
   Button,
 } from "@mui/material";
-import { Pencil, Trash2, PlayCircle, Eye } from "lucide-react"; // Import the Eye icon
+import { Pencil, Trash2, PlayCircle, Eye } from "lucide-react"; 
 import { motion } from "framer-motion";
 
 const DeckCard = ({
@@ -145,7 +145,7 @@ const DeckCard = ({
                 <Pencil size={18} />
               </IconButton>
             )}
-            {/* Conditionally render the delete button */}
+
             {!is_default && (
               <IconButton
                 size="small"
@@ -159,8 +159,8 @@ const DeckCard = ({
           <Box sx={{ display: "flex", gap: 2 }}>
             <Button
               variant="outlined"
-              startIcon={<Eye size={18} />} // Add the Eye icon
-              onClick={() => navigate(`/mydecks/${deck.id}`)} // Navigate to deck details
+              startIcon={<Eye size={18} />} 
+              onClick={() => navigate(`/mydecks/${deck.id}`)} 
               sx={{
                 borderColor: "primary.main",
                 color: "primary.main",

@@ -31,7 +31,6 @@ export function CircularProgress({ percentage, label, size = 120 }) {
           height: size,
         }}
       >
-        {/* Background circle */}
         <MUICircularProgress
           variant="determinate"
           value={100}
@@ -44,7 +43,6 @@ export function CircularProgress({ percentage, label, size = 120 }) {
                 : "rgba(0,0,0,0.1)",
           }}
         />
-        {/* Progress circle */}
         <MUICircularProgress
           variant="determinate"
           value={percentage}
@@ -59,7 +57,6 @@ export function CircularProgress({ percentage, label, size = 120 }) {
             },
           }}
         />
-        {/* Percentage text */}
         <Box
           sx={{
             top: 0,
@@ -90,7 +87,6 @@ export function CircularProgress({ percentage, label, size = 120 }) {
           </motion.div>
         </Box>
       </Box>
-      {/* Label */}
       <motion.div
         initial={{ opacity: 0, y: 5 }}
         animate={{ opacity: 1, y: 0 }}

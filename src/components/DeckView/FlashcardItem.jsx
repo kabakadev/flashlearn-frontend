@@ -12,7 +12,6 @@ import {
 import { motion } from "framer-motion";
 import { Pencil, Trash2, Repeat } from "lucide-react";
 
-// src/components/DeckView/FlashcardItem.jsx
 const FlashcardItem = ({ flashcard, onEdit, onDelete, is_default }) => {
   const [previewSide, setPreviewSide] = useState("front");
 
@@ -126,8 +125,7 @@ const FlashcardItem = ({ flashcard, onEdit, onDelete, is_default }) => {
                   </IconButton>
                 </Tooltip>
               )}
-              {/* Conditionally render the delete button */}
-              {console.log("this is is_default", is_default)}
+  
               {!is_default && (
                 <Tooltip title="Delete flashcard">
                   <IconButton

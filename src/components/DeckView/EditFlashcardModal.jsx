@@ -16,10 +16,9 @@ const EditFlashcardModal = ({
   error,
   setError,
 }) => {
-  // Local state for the edited flashcard
+  
   const [editedFlashcard, setEditedFlashcard] = useState(flashcard);
 
-  // Update the local state when the `flashcard` prop changes
   useEffect(() => {
     setEditedFlashcard(flashcard);
   }, [flashcard]);
@@ -32,7 +31,7 @@ const EditFlashcardModal = ({
       setError("Both question and answer are required.");
       return;
     }
-    onSave(editedFlashcard); // Send the edited flashcard data to the parent component
+    onSave(editedFlashcard); 
   };
 
   return (

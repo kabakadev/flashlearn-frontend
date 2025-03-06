@@ -33,7 +33,7 @@ const FlashcardList = ({
   navigate,
   deckId,
   onAddFlashcard,
-  is_default, // Add is_default prop
+  is_default, 
 }) => (
   <motion.div variants={containerVariants} initial="hidden" animate="visible">
     {flashcards.length === 0 ? (
@@ -81,7 +81,7 @@ const FlashcardList = ({
                 flashcard={flashcard}
                 onEdit={onEdit}
                 onDelete={onDelete}
-                is_default={is_default} // Pass the is_default flag
+                is_default={is_default} 
               />
             </Grid>
           ))}
