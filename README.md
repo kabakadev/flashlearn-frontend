@@ -67,7 +67,7 @@ FlashLearn is built using the following technologies:
 
 For support or inquiries, feel free to reach out:
 
-- 📧 **Email:** [iankabaka1@gmail.com](mailto:iankabaka1@gmail.com)
+- 📧 **Email:** [Email:](mailto:iankabaka1@gmail.com)
 
 ## License
 
