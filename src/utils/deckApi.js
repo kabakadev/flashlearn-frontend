@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000";
+const API_URL = "https://flashlearn-backend-2.onrender.com";
 
 export const fetchDeckAndFlashcards = async (deckId) => {
   const token = localStorage.getItem("authToken");
@@ -22,11 +22,11 @@ export const fetchDeckAndFlashcards = async (deckId) => {
   const cardsData = await cardsResponse.json();
 
   if (cardsData.message === "No flashcards found.") {
-    return { deckData, flashcardsData: [] }; 
+    return { deckData, flashcardsData: [] };
   }
 
   if (!Array.isArray(cardsData)) {
-    return { deckData, flashcardsData: [] }; 
+    return { deckData, flashcardsData: [] };
   }
 
   const flashcardsData = cardsData.filter(
@@ -111,7 +111,7 @@ export const fetchDecks = async (token) => {
     if (!response.ok) throw new Error("Failed to fetch decks");
 
     const data = await response.json();
-    return Array.isArray(data) ? data : []; 
+    return Array.isArray(data) ? data : [];
   } catch (error) {
     return [];
   }

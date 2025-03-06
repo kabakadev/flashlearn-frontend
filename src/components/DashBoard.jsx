@@ -27,7 +27,7 @@ const Dashboard = () => {
   const [decks, setDecks] = useState([]);
   const [progress, setProgress] = useState([]);
   const [stats, setStats] = useState({});
-  const API_URL = "http://localhost:5000";
+  const API_URL = "https://flashlearn-backend-2.onrender.com";
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -77,20 +77,6 @@ const Dashboard = () => {
       throw new Error("Failed to fetch dashboard data");
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
-      // // Fallback to localStorage if there's an error
-      // const savedWeeklyGoal = localStorage.getItem("weeklyGoal");
-      // return {
-      //   weekly_goal: savedWeeklyGoal
-      //     ? Number.parseInt(savedWeeklyGoal, 10)
-      //     : 10,
-      //   mastery_level: 0,
-      //   study_streak: 0,
-      //   focus_score: 0,
-      //   retention_rate: 0,
-      //   cards_mastered: 0,
-      //   minutes_per_day: 0,
-      //   accuracy: 0,
-      // };
     }
   };
   const fetchDecks = async (token) => {
@@ -134,7 +120,7 @@ const Dashboard = () => {
 
     setStats({
       total_flashcards_studied: cardsStudiedThisWeek,
-      weekly_goal: weekly_goal, 
+      weekly_goal: weekly_goal,
       study_streak: streak,
       mastery_level:
         totalAttempts > 0
