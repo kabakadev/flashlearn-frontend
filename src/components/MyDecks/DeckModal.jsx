@@ -32,36 +32,49 @@ const DeckModal = ({
   onSave,
 }) => {
   const [error, setError] = useState("");
+  const [touched, setTouched] = useState({
+    deckTitle: false,
+    deckDescription: false,
+    deckSubject: false,
+    deckCategory: false,
+    deckDifficulty: false,
+  });
 
+  // Validate the form
   const validateForm = () => {
-    if (!deckTitle.trim()) {
-      setError("Title is required");
-      return false;
-    }
-    if (!deckDescription.trim()) {
-      setError("Description is required");
-      return false;
-    }
-    if (!deckSubject.trim()) {
-      setError("Subject is required");
-      return false;
-    }
-    if (!deckCategory.trim()) {
-      setError("Category is required");
-      return false;
-    }
-    if (!deckDifficulty) {
-      setError("Difficulty Level is required");
-      return false;
-    }
-    return true;
+    const errors = {};
+    if (!deckTitle.trim()) errors.deckTitle = "Title is required";
+    if (!deckDescription.trim())
+      errors.deckDescription = "Description is required";
+    if (!deckSubject.trim()) errors.deckSubject = "Subject is required";
+    if (!deckCategory.trim()) errors.deckCategory = "Category is required";
+    if (!deckDifficulty) errors.deckDifficulty = "Difficulty Level is required";
+
+    return errors;
   };
 
+  // Handle form submission
   const handleSave = () => {
-    if (validateForm()) {
+    const errors = validateForm();
+    if (Object.keys(errors).length === 0) {
       setError("");
       onSave();
+    } else {
+      setError("Please fill in all required fields.");
+      // Mark all fields as touched to show errors
+      setTouched({
+        deckTitle: true,
+        deckDescription: true,
+        deckSubject: true,
+        deckCategory: true,
+        deckDifficulty: true,
+      });
     }
+  };
+
+  // Handle field blur (when user leaves a field)
+  const handleBlur = (field) => () => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
   };
 
   return (
@@ -106,22 +119,30 @@ const DeckModal = ({
             label="Deck Title"
             value={deckTitle}
             onChange={(e) => setDeckTitle(e.target.value)}
+            onBlur={handleBlur("deckTitle")}
             fullWidth
             required
-            error={!deckTitle.trim()}
-            helperText={!deckTitle.trim() && "Title is required"}
+            error={touched.deckTitle && !deckTitle.trim()}
+            helperText={
+              touched.deckTitle && !deckTitle.trim() && "Title is required"
+            }
           />
 
           <TextField
             label="Description"
             value={deckDescription}
             onChange={(e) => setDeckDescription(e.target.value)}
+            onBlur={handleBlur("deckDescription")}
             fullWidth
             multiline
             rows={3}
             required
-            error={!deckDescription.trim()}
-            helperText={!deckDescription.trim() && "Description is required"}
+            error={touched.deckDescription && !deckDescription.trim()}
+            helperText={
+              touched.deckDescription &&
+              !deckDescription.trim() &&
+              "Description is required"
+            }
           />
 
           <Grid container spacing={2}>
@@ -130,10 +151,15 @@ const DeckModal = ({
                 label="Subject"
                 value={deckSubject}
                 onChange={(e) => setDeckSubject(e.target.value)}
+                onBlur={handleBlur("deckSubject")}
                 fullWidth
                 required
-                error={!deckSubject.trim()}
-                helperText={!deckSubject.trim() && "Subject is required"}
+                error={touched.deckSubject && !deckSubject.trim()}
+                helperText={
+                  touched.deckSubject &&
+                  !deckSubject.trim() &&
+                  "Subject is required"
+                }
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -141,10 +167,15 @@ const DeckModal = ({
                 label="Category"
                 value={deckCategory}
                 onChange={(e) => setDeckCategory(e.target.value)}
+                onBlur={handleBlur("deckCategory")}
                 fullWidth
                 required
-                error={!deckCategory.trim()}
-                helperText={!deckCategory.trim() && "Category is required"}
+                error={touched.deckCategory && !deckCategory.trim()}
+                helperText={
+                  touched.deckCategory &&
+                  !deckCategory.trim() &&
+                  "Category is required"
+                }
               />
             </Grid>
           </Grid>
@@ -154,9 +185,10 @@ const DeckModal = ({
             <Select
               value={deckDifficulty}
               onChange={(e) => setDeckDifficulty(Number(e.target.value))}
+              onBlur={handleBlur("deckDifficulty")}
               label="Difficulty Level"
               required
-              error={!deckDifficulty}
+              error={touched.deckDifficulty && !deckDifficulty}
             >
               {[1, 2, 3, 4, 5].map((level) => (
                 <MenuItem key={level} value={level}>
