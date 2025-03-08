@@ -193,7 +193,6 @@ const MyDecks = () => {
       </Box>
     );
   }
-  console.log(decks);
 
   return (
     <Box sx={{ bgcolor: "background.default", minHeight: "100vh", pb: 8 }}>
