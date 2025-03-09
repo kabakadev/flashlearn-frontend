@@ -104,6 +104,31 @@ const DeckView = () => {
     setFlashcardToDelete(flashcardId);
     setDeleteConfirmationOpen(true);
   };
+  const handleDeleteConfirm = async () => {
+    if (!flashcardToDelete) return;
+
+    setIsDeleting(true); // Start loading
+    setError(""); // Clear any previous errors
+
+    try {
+      await deleteFlashcard(flashcardToDelete);
+      setFlashcards((prevFlashcards) =>
+        prevFlashcards.filter((card) => card.id !== flashcardToDelete)
+      );
+    } catch (error) {
+      console.error("Error deleting flashcard:", error);
+      setError("Failed to delete flashcard. Please try again.");
+    } finally {
+      setIsDeleting(false); // Stop loading
+      setDeleteConfirmationOpen(false);
+      setFlashcardToDelete(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteConfirmationOpen(false);
+    setFlashcardToDelete(null);
+  };
 
   if (userLoading || loading) {
     return (
