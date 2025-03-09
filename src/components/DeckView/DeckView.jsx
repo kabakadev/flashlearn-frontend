@@ -100,13 +100,9 @@ const DeckView = () => {
     }
   };
 
-  const handleDeleteFlashcard = async (flashcardId) => {
-    try {
-      await deleteFlashcard(flashcardId);
-      setFlashcards(flashcards.filter((card) => card.id !== flashcardId));
-    } catch (error) {
-      setError("Failed to delete flashcard. Please try again.");
-    }
+  const handleDeleteFlashcard = (flashcardId) => {
+    setFlashcardToDelete(flashcardId);
+    setDeleteConfirmationOpen(true);
   };
 
   if (userLoading || loading) {
