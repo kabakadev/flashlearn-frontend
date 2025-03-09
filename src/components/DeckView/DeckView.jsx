@@ -39,6 +39,9 @@ const DeckView = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [flashcardToDelete, setFlashcardToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false); // For loading state during deletion
 
   useEffect(() => {
     if (!userLoading && !isAuthenticated) {
@@ -67,7 +70,7 @@ const DeckView = () => {
   }, [deckId, user]);
 
   const handleAddFlashcard = () => {
-    setAddModalOpen(true); 
+    setAddModalOpen(true);
   };
 
   const handleSaveFlashcard = async () => {
@@ -128,7 +131,7 @@ const DeckView = () => {
       <Container maxWidth="xl" sx={{ mt: 4 }}>
         <DeckHeader
           deck={deck}
-          onAddFlashcard={handleAddFlashcard} 
+          onAddFlashcard={handleAddFlashcard}
           navigate={navigate}
         />
 
@@ -147,8 +150,8 @@ const DeckView = () => {
           onDelete={handleDeleteFlashcard}
           navigate={navigate}
           deckId={deckId}
-          onAddFlashcard={handleAddFlashcard} 
-          is_default={deck?.is_default} 
+          onAddFlashcard={handleAddFlashcard}
+          is_default={deck?.is_default}
         />
 
         <EditFlashcardModal
