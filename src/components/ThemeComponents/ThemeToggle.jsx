@@ -5,7 +5,7 @@ import { Sun, Moon } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 import { IconButton } from "@mui/material";
 
-export default function ThemeToggle() {
+export default function ThemeToggle({ compact = false }) {
   const { theme, setTheme } = useTheme();
   const isDark = theme === "dark";
 
@@ -18,9 +18,9 @@ export default function ThemeToggle() {
       onClick={toggleTheme}
       sx={{
         position: "relative",
-        width: "56px",
-        height: "32px",
-        borderRadius: "16px",
+        width: compact ? "40px" : "56px",
+        height: compact ? "24px" : "32px",
+        borderRadius: compact ? "12px" : "16px",
         bgcolor: (theme) =>
           theme.palette.mode === "dark"
             ? "rgba(255,255,255,0.1)"
@@ -39,21 +39,21 @@ export default function ThemeToggle() {
           position: "absolute",
           top: "4px",
           left: "4px",
-          width: "24px",
-          height: "24px",
-          borderRadius: "12px",
+          width: compact ? "16px" : "24px",
+          height: compact ? "16px" : "24px",
+          borderRadius: compact ? "8px" : "12px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: isDark ? "#ff69b4" : "#ff69b4", 
+          backgroundColor: "#ff69b4",
         }}
-        animate={{ x: isDark ? 24 : 0 }}
+        animate={{ x: isDark ? (compact ? 16 : 24) : 0 }}
         transition={{ type: "spring", stiffness: 500, damping: 30 }}
       >
         {isDark ? (
           <Moon className="h-4 w-4 text-pink-200" />
         ) : (
-          <Sun className="h-4 w-4 text-pink-200" /> 
+          <Sun className="h-4 w-4 text-pink-200" />
         )}
       </motion.div>
     </IconButton>

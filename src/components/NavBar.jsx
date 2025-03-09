@@ -14,8 +14,20 @@ import {
   useTheme,
   Menu,
   Divider,
+  useMediaQuery,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
-import { LogOut, LayoutDashboard, BookOpen, GraduationCap } from "lucide-react";
+import {
+  LogOut,
+  LayoutDashboard,
+  BookOpen,
+  GraduationCap,
+  Menu as MenuIcon,
+} from "lucide-react";
 import ThemeToggle from "./ThemeComponents/ThemeToggle";
 import { useState } from "react";
 
@@ -25,6 +37,8 @@ const NavBar = () => {
   const location = useLocation();
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleLogout = async () => {
     await logout();
@@ -39,11 +53,69 @@ const NavBar = () => {
     setAnchorEl(null);
   };
 
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
   const navItems = [
     { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { path: "/mydecks", label: "My Decks", icon: BookOpen },
     { path: "/study", label: "Study", icon: GraduationCap },
   ];
+
+  const drawer = (
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
+      <Typography variant="h6" sx={{ my: 2 }}>
+        Flashlearn
+      </Typography>
+      <Divider />
+      <List>
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = location.pathname === item.path;
+
+          return (
+            <ListItem
+              key={item.path}
+              component={RouterLink}
+              to={item.path}
+              sx={{
+                color: isActive ? "primary.main" : "text.secondary",
+                "&:hover": {
+                  color: "primary.main",
+                },
+                textTransform: "none",
+                fontSize: "0.875rem",
+                fontWeight: isActive ? 600 : 400,
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 36 }}>
+                <Icon size={18} />
+              </ListItemIcon>
+              <ListItemText primary={item.label} />
+            </ListItem>
+          );
+        })}
+
+        {user && (
+          <ListItem
+            onClick={handleLogout}
+            sx={{
+              color: "error.main",
+              "&:hover": {
+                backgroundColor: "rgba(255, 0, 0, 0.04)",
+              },
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: 36 }}>
+              <LogOut size={18} color={theme.palette.error.main} />
+            </ListItemIcon>
+            <ListItemText primary="Sign Out" />
+          </ListItem>
+        )}
+      </List>
+    </Box>
+  );
 
   return (
     <AppBar
@@ -56,9 +128,21 @@ const NavBar = () => {
       }}
     >
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
+        <Toolbar disableGutters sx={{ gap: 2 }}>
+          {isMobile && (
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 0 }}
+            >
+              <MenuIcon size={22} />
+            </IconButton>
+          )}
+
           <Typography
-            variant="h5"
+            variant={isMobile ? "h6" : "h5"}
             component={RouterLink}
             to="/dashboard"
             sx={{
@@ -68,67 +152,72 @@ const NavBar = () => {
               display: "flex",
               alignItems: "center",
               gap: 1,
+              flexGrow: isMobile ? 1 : 0,
             }}
           >
-            <BookOpen size={24} />
+            <BookOpen size={isMobile ? 20 : 24} />
             Flashlearn
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: "flex", gap: 2, ml: 6 }}>
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
+          {!isMobile && (
+            <Box sx={{ flexGrow: 1, display: "flex", gap: 2, ml: 6 }}>
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.path;
 
-              return (
-                <Button
-                  key={item.path}
-                  component={RouterLink}
-                  to={item.path}
-                  sx={{
-                    color: isActive ? "primary.main" : "text.secondary",
-                    "&:hover": {
-                      color: "primary.main",
-                    },
-                    textTransform: "none",
-                    fontSize: "1rem",
-                    fontWeight: isActive ? 600 : 400,
-                  }}
-                  startIcon={<Icon size={20} />}
-                >
-                  {item.label}
-                </Button>
-              );
-            })}
-          </Box>
+                return (
+                  <Button
+                    key={item.path}
+                    component={RouterLink}
+                    to={item.path}
+                    sx={{
+                      color: isActive ? "primary.main" : "text.secondary",
+                      "&:hover": {
+                        color: "primary.main",
+                      },
+                      textTransform: "none",
+                      fontSize: "1rem",
+                      fontWeight: isActive ? 600 : 400,
+                    }}
+                    startIcon={<Icon size={20} />}
+                  >
+                    {item.label}
+                  </Button>
+                );
+              })}
+            </Box>
+          )}
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <ThemeToggle />
-            <IconButton onClick={handleMenuOpen}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <ThemeToggle compact={isMobile} />
+            <IconButton onClick={handleMenuOpen} sx={{ p: 0.5 }}>
               <Avatar
                 sx={{
                   bgcolor: "primary.main",
                   color: "primary.contrastText",
-                  width: 36,
-                  height: 36,
+                  width: isMobile ? 32 : 36,
+                  height: isMobile ? 32 : 36,
                   fontWeight: "bold",
+                  fontSize: isMobile ? "0.875rem" : "1rem",
                 }}
               >
                 {user?.username?.charAt(0).toUpperCase() || "U"}
               </Avatar>
             </IconButton>
-            {user && (
+            {user && !isMobile && (
               <Button
                 onClick={handleLogout}
-                startIcon={<LogOut size={20} />}
+                startIcon={<LogOut size={18} />}
                 sx={{
-                color: theme.palette.primary.contrastText,
-                bgcolor: theme.palette.primary.main,
-                "&:hover": {
+                  color: theme.palette.primary.contrastText,
+                  bgcolor: theme.palette.primary.main,
+                  "&:hover": {
                     bgcolor: theme.palette.primary.dark,
-                },
-
+                  },
                   textTransform: "none",
-                  fontSize: "1rem",
+                  fontSize: "0.875rem",
+                  px: 1.5,
+                  py: 0.75,
                 }}
               >
                 Sign Out
@@ -146,7 +235,7 @@ const NavBar = () => {
             PaperProps={{
               sx: {
                 mt: 1,
-                width: 200,
+                width: isMobile ? 180 : 200,
                 bgcolor: "background.paper",
                 border: 1,
                 borderColor: "divider",
@@ -157,18 +246,41 @@ const NavBar = () => {
             }}
           >
             <Box sx={{ px: 2, py: 1.5 }}>
-              <Typography variant="subtitle2" sx={{ color: "text.secondary" }}>
+              <Typography
+                variant="caption"
+                sx={{ color: "text.secondary", display: "block" }}
+              >
                 Signed in as
               </Typography>
-              <Typography variant="body1" sx={{ fontWeight: 500 }}>
+              <Typography
+                variant="subtitle2"
+                sx={{ fontWeight: 500, lineHeight: 1.2 }}
+              >
                 {user?.username || "User"}
               </Typography>
             </Box>
             <Divider />
-            <Divider />
           </Menu>
         </Toolbar>
       </Container>
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true,
+        }}
+        sx={{
+          display: { xs: "block", md: "none" },
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: 240,
+            bgcolor: "background.paper",
+          },
+        }}
+      >
+        {drawer}
+      </Drawer>
     </AppBar>
   );
 };
