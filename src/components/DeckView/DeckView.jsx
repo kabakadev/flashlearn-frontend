@@ -21,6 +21,7 @@ import {
   updateFlashcard,
   deleteFlashcard,
 } from "../../utils/deckApi";
+import ConfirmationDialog from "../MyDecks/ConfirmationDialog";
 
 const DeckView = () => {
   const { user, isAuthenticated, loading: userLoading } = useUser();
@@ -198,6 +199,14 @@ const DeckView = () => {
           onSave={handleSaveFlashcard}
           error={error}
           setError={setError}
+        />
+        <ConfirmationDialog
+          open={deleteConfirmationOpen}
+          onClose={handleDeleteCancel}
+          onConfirm={handleDeleteConfirm}
+          title="Delete Flashcard"
+          message="Are you sure you want to delete this flashcard? This action cannot be undone."
+          isDeleting={isDeleting} // Pass the loading state
         />
       </Container>
     </Box>
