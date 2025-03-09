@@ -110,36 +110,32 @@ const FlashcardItem = ({ flashcard, onEdit, onDelete, is_default }) => {
             }}
           >
             <Box>
-              {!is_default && (
-                <Tooltip title="Edit flashcard">
-                  <IconButton
-                    size="small"
-                    onClick={() => onEdit(flashcard)}
-                    sx={{
-                      mr: 1,
-                      color: "text.secondary",
-                      "&:hover": { color: "primary.main" },
-                    }}
-                  >
-                    <Pencil size={18} />
-                  </IconButton>
-                </Tooltip>
-              )}
-  
-              {!is_default && (
-                <Tooltip title="Delete flashcard">
-                  <IconButton
-                    size="small"
-                    onClick={() => onDelete(flashcard.id)}
-                    sx={{
-                      color: "error.main",
-                      "&:hover": { color: "error.dark" },
-                    }}
-                  >
-                    <Trash2 size={18} />
-                  </IconButton>
-                </Tooltip>
-              )}
+              <Tooltip title="Edit flashcard">
+                <IconButton
+                  size="small"
+                  onClick={() => onEdit(flashcard)}
+                  sx={{
+                    mr: 1,
+                    color: "text.secondary",
+                    "&:hover": { color: "primary.main" },
+                  }}
+                >
+                  <Pencil size={18} />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Delete flashcard">
+                <IconButton
+                  size="small"
+                  onClick={(e) => onDelete(e, deck.id)}
+                  sx={{
+                    color: "error.main",
+                    "&:hover": { color: "error.dark" },
+                  }}
+                >
+                  <Trash2 size={18} />
+                </IconButton>
+              </Tooltip>
             </Box>
           </Box>
         </CardContent>

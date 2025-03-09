@@ -42,7 +42,6 @@ const DeckView = () => {
   const [error, setError] = useState("");
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [flashcardToDelete, setFlashcardToDelete] = useState(null);
-  const [isDeleting, setIsDeleting] = useState(false); // For loading state during deletion
 
   useEffect(() => {
     if (!userLoading && !isAuthenticated) {
@@ -101,7 +100,8 @@ const DeckView = () => {
     }
   };
 
-  const handleDeleteFlashcard = (flashcardId) => {
+  const handleDeleteFlashcard = (event, flashcardId) => {
+    event.stopPropagation();
     setFlashcardToDelete(flashcardId);
     setDeleteConfirmationOpen(true);
   };
