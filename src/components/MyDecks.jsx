@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import NavBar from "./NavBar";
+import ConfirmationDialog from "./MyDecks/ConfirmationDialog";
 
 import EmptyState from "./MyDecks/EmptyState";
 import DeckCard from "./MyDecks/DeckCard";
@@ -42,6 +43,8 @@ const MyDecks = () => {
     search: "",
   });
   const [sortBy, setSortBy] = useState("title");
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [deckToDelete, setDeckToDelete] = useState(null);
 
   useEffect(() => {
     if (!userLoading && !isAuthenticated) {
@@ -97,17 +100,32 @@ const MyDecks = () => {
       setError("An error occurred while saving the deck.");
     }
   };
-  const handleDeleteDeck = async (event, deckId) => {
+  const handleDeleteDeck = (event, deckId) => {
     event.stopPropagation();
-    if (!window.confirm("Are you sure you want to delete this deck?")) return;
+    setDeckToDelete(deckId);
+    setDeleteConfirmationOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deckToDelete) return;
 
     try {
-      await deleteDeck(deckId);
-      setDecks((prevDecks) => prevDecks.filter((deck) => deck.id !== deckId));
+      await deleteDeck(deckToDelete);
+      setDecks((prevDecks) =>
+        prevDecks.filter((deck) => deck.id !== deckToDelete)
+      );
     } catch (error) {
       console.error("Error deleting deck:", error);
       setError("An error occurred while deleting the deck.");
+    } finally {
+      setDeleteConfirmationOpen(false);
+      setDeckToDelete(null);
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteConfirmationOpen(false);
+    setDeckToDelete(null);
   };
   const handleCloseModal = () => {
     setModalOpen(false);
@@ -264,6 +282,13 @@ const MyDecks = () => {
           setDeckDifficulty={setDeckDifficulty}
           error={error}
           onSave={handleCreateOrUpdateDeck}
+        />
+        <ConfirmationDialog
+          open={deleteConfirmationOpen}
+          onClose={handleDeleteCancel}
+          onConfirm={handleDeleteConfirm}
+          title="Delete Deck"
+          message="Are you sure you want to delete this deck? This action cannot be undone."
         />
       </Container>
     </Box>
