@@ -21,6 +21,7 @@ import {
   updateFlashcard,
   deleteFlashcard,
 } from "../../utils/deckApi";
+import ConfirmationDialog from "../MyDecks/ConfirmationDialog";
 
 const DeckView = () => {
   const { user, isAuthenticated, loading: userLoading } = useUser();
@@ -39,6 +40,8 @@ const DeckView = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [flashcardToDelete, setFlashcardToDelete] = useState(null);
 
   useEffect(() => {
     if (!userLoading && !isAuthenticated) {
@@ -67,7 +70,7 @@ const DeckView = () => {
   }, [deckId, user]);
 
   const handleAddFlashcard = () => {
-    setAddModalOpen(true); 
+    setAddModalOpen(true);
   };
 
   const handleSaveFlashcard = async () => {
@@ -97,13 +100,31 @@ const DeckView = () => {
     }
   };
 
-  const handleDeleteFlashcard = async (flashcardId) => {
+  const handleDeleteFlashcard = (flashcardId) => {
+    setFlashcardToDelete(flashcardId);
+    setDeleteConfirmationOpen(true);
+  };
+  const handleDeleteConfirm = async () => {
+    if (!flashcardToDelete) return;
+
     try {
-      await deleteFlashcard(flashcardId);
-      setFlashcards(flashcards.filter((card) => card.id !== flashcardId));
+      console.log("this is the id to delete", flashcardToDelete);
+      await deleteFlashcard(flashcardToDelete);
+      setFlashcards((prevFlashcards) =>
+        prevFlashcards.filter((card) => card.id !== flashcardToDelete)
+      );
     } catch (error) {
+      console.error("Error deleting flashcard:", error);
       setError("Failed to delete flashcard. Please try again.");
+    } finally {
+      setDeleteConfirmationOpen(false);
+      setFlashcardToDelete(null);
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteConfirmationOpen(false);
+    setFlashcardToDelete(null);
   };
 
   if (userLoading || loading) {
@@ -128,7 +149,7 @@ const DeckView = () => {
       <Container maxWidth="xl" sx={{ mt: 4 }}>
         <DeckHeader
           deck={deck}
-          onAddFlashcard={handleAddFlashcard} 
+          onAddFlashcard={handleAddFlashcard}
           navigate={navigate}
         />
 
@@ -147,8 +168,8 @@ const DeckView = () => {
           onDelete={handleDeleteFlashcard}
           navigate={navigate}
           deckId={deckId}
-          onAddFlashcard={handleAddFlashcard} 
-          is_default={deck?.is_default} 
+          onAddFlashcard={handleAddFlashcard}
+          is_default={deck?.is_default}
         />
 
         <EditFlashcardModal
@@ -174,6 +195,13 @@ const DeckView = () => {
           onSave={handleSaveFlashcard}
           error={error}
           setError={setError}
+        />
+        <ConfirmationDialog
+          open={deleteConfirmationOpen}
+          onClose={handleDeleteCancel}
+          onConfirm={handleDeleteConfirm}
+          title="Delete Flashcard"
+          message="Are you sure you want to delete this flashcard? This action cannot be undone."
         />
       </Container>
     </Box>
