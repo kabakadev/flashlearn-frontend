@@ -50,24 +50,6 @@ const StudyActions = ({
             </IconButton>
           </span>
         </Tooltip>
-        <Tooltip
-          title={
-            cardProgress.is_learned ? "Already Learned" : "Mark as Learned"
-          }
-        >
-          <span>
-            <Button
-              variant="outlined"
-              color={cardProgress.is_learned ? "success" : "primary"}
-              onClick={handleMarkAsLearned}
-              startIcon={<Trophy size={20} />}
-              disabled={cardProgress.is_learned}
-              sx={{ px: 2 }}
-            >
-              {cardProgress.is_learned ? "Learned" : "Mark as Learned"}
-            </Button>
-          </span>
-        </Tooltip>
 
         <Tooltip title="Next Card (Right Arrow)">
           <span>
