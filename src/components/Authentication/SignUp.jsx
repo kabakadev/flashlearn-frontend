@@ -20,7 +20,7 @@ import ThemeToggle from "../ThemeComponents/ThemeToggle";
 
 const validationSchema = Yup.object({
   email: Yup.string()
-    .email("Invalid email address")
+    .matches(/^[\w\.-]+@[\w\.-]+\.\w+$/, "Invalid email address")
     .required("Email is required"),
   username: Yup.string()
     .min(3, "Username must be at least 3 characters")
@@ -196,7 +196,7 @@ const Signup = () => {
                       component={RouterLink}
                       to="/login"
                       sx={{
-                        color: theme => theme.palette.secondary.main,
+                        color: (theme) => theme.palette.secondary.main,
                         textDecoration: "none",
                         "&:hover": {
                           textDecoration: "underline",

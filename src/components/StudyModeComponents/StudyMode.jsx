@@ -13,7 +13,7 @@ import { useStudySession } from "./StudyMode/useStudySession";
 import LoadingState from "./LoadingState";
 import EmptyDeckState from "./StudyMode/EmptyDeckState";
 
-const API_URL = "https://flashlearn-backend-2.onrender.com";
+const API_URL = "https://flashlearn-backend-ityf.onrender.com";
 
 const StudyMode = () => {
   const { deckId } = useParams();

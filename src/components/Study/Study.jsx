@@ -46,7 +46,7 @@ const Study = () => {
   const fetchDecks = async () => {
     try {
       const response = await fetch(
-        "https://flashlearn-backend-2.onrender.com/decks",
+        "https://flashlearn-backend-ityf.onrender.com/decks",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
@@ -69,7 +69,7 @@ const Study = () => {
   const fetchUserStats = async () => {
     try {
       const response = await fetch(
-        "https://flashlearn-backend-2.onrender.com/dashboard",
+        "https://flashlearn-backend-ityf.onrender.com/dashboard",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
@@ -98,7 +98,7 @@ const Study = () => {
   const updateWeeklyGoal = async () => {
     try {
       const response = await fetch(
-        "https://flashlearn-backend-2.onrender.com/user/stats",
+        "https://flashlearn-backend-ityf.onrender.com/user/stats",
         {
           method: "PUT",
           headers: {

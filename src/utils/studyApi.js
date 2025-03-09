@@ -1,4 +1,4 @@
-const API_URL = "https://flashlearn-backend-2.onrender.com";
+const API_URL = "https://flashlearn-backend-ityf.onrender.com";
 
 export const fetchUserData = async (user) => {
   const token = localStorage.getItem("authToken");
