@@ -44,9 +44,6 @@ const DeckCard = ({ deck, deckStats, theme, navigate }) => (
           </Typography>
           <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
             <Typography variant="caption" sx={{ color: "text.secondary" }}>
-              {deckStats.cardsLearned} / {deck.card_count || 0} learned
-            </Typography>
-            <Typography variant="caption" sx={{ color: "text.secondary" }}>
               Last studied: {getRelativeTime(deckStats.lastStudied)}
             </Typography>
           </Box>
