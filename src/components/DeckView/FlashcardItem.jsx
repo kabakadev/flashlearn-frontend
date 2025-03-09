@@ -12,7 +12,7 @@ import {
 import { motion } from "framer-motion";
 import { Pencil, Trash2, Repeat } from "lucide-react";
 
-const FlashcardItem = ({ flashcard, onEdit, onDelete, is_default }) => {
+const FlashcardItem = ({ flashcard, onEdit, onDelete }) => {
   const [previewSide, setPreviewSide] = useState("front");
 
   const toggleCardSide = () => {
@@ -127,7 +127,7 @@ const FlashcardItem = ({ flashcard, onEdit, onDelete, is_default }) => {
               <Tooltip title="Delete flashcard">
                 <IconButton
                   size="small"
-                  onClick={(e) => onDelete(e, deck.id)}
+                  onClick={() => onDelete(flashcard.id)}
                   sx={{
                     color: "error.main",
                     "&:hover": { color: "error.dark" },

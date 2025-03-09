@@ -100,18 +100,15 @@ const DeckView = () => {
     }
   };
 
-  const handleDeleteFlashcard = (event, flashcardId) => {
-    event.stopPropagation();
+  const handleDeleteFlashcard = (flashcardId) => {
     setFlashcardToDelete(flashcardId);
     setDeleteConfirmationOpen(true);
   };
   const handleDeleteConfirm = async () => {
     if (!flashcardToDelete) return;
 
-    setIsDeleting(true); // Start loading
-    setError(""); // Clear any previous errors
-
     try {
+      console.log("this is the id to delete", flashcardToDelete);
       await deleteFlashcard(flashcardToDelete);
       setFlashcards((prevFlashcards) =>
         prevFlashcards.filter((card) => card.id !== flashcardToDelete)
@@ -120,7 +117,6 @@ const DeckView = () => {
       console.error("Error deleting flashcard:", error);
       setError("Failed to delete flashcard. Please try again.");
     } finally {
-      setIsDeleting(false); // Stop loading
       setDeleteConfirmationOpen(false);
       setFlashcardToDelete(null);
     }
@@ -206,7 +202,6 @@ const DeckView = () => {
           onConfirm={handleDeleteConfirm}
           title="Delete Flashcard"
           message="Are you sure you want to delete this flashcard? This action cannot be undone."
-          isDeleting={isDeleting} // Pass the loading state
         />
       </Container>
     </Box>
