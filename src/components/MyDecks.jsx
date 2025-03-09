@@ -55,11 +55,11 @@ const MyDecks = () => {
       try {
         const token = localStorage.getItem("authToken");
         const fetchedDecks = await fetchDecks(token);
-        setDecks(Array.isArray(fetchedDecks) ? fetchedDecks : []); 
+        setDecks(Array.isArray(fetchedDecks) ? fetchedDecks : []);
       } catch (error) {
         console.error("Error fetching decks:", error);
         setError("An error occurred while loading decks.");
-        setDecks([]); 
+        setDecks([]);
       } finally {
         setLoading(false);
       }
@@ -102,8 +102,8 @@ const MyDecks = () => {
     if (!window.confirm("Are you sure you want to delete this deck?")) return;
 
     try {
-      await deleteDeck(deckId); 
-      setDecks((prevDecks) => prevDecks.filter((deck) => deck.id !== deckId)); 
+      await deleteDeck(deckId);
+      setDecks((prevDecks) => prevDecks.filter((deck) => deck.id !== deckId));
     } catch (error) {
       console.error("Error deleting deck:", error);
       setError("An error occurred while deleting the deck.");
@@ -136,9 +136,8 @@ const MyDecks = () => {
     navigate(`/study/${deckId}`);
   };
 
-
   const filteredAndSortedDecks = useMemo(() => {
-    if (!Array.isArray(decks)) return []; 
+    if (!Array.isArray(decks)) return [];
 
     return decks
       .filter((deck) => {
@@ -242,7 +241,6 @@ const MyDecks = () => {
                     onDelete={handleDeleteDeck}
                     onStudy={handleStudyDeck}
                     navigate={navigate}
-                    is_default={deck.is_default} 
                   />
                 </Grid>
               ))}

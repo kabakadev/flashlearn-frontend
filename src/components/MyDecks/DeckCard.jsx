@@ -7,18 +7,10 @@ import {
   IconButton,
   Button,
 } from "@mui/material";
-import { Pencil, Trash2, PlayCircle, Eye } from "lucide-react"; 
+import { Pencil, Trash2, PlayCircle, Eye } from "lucide-react";
 import { motion } from "framer-motion";
 
-const DeckCard = ({
-  deck,
-  theme,
-  onEdit,
-  onDelete,
-  onStudy,
-  navigate,
-  is_default,
-}) => (
+const DeckCard = ({ deck, theme, onEdit, onDelete, onStudy, navigate }) => (
   <motion.div whileHover={{ y: -5, transition: { duration: 0.2 } }}>
     <Card
       sx={{
@@ -74,14 +66,6 @@ const DeckCard = ({
           <Typography variant="body2" sx={{ color: "text.secondary", mb: 3 }}>
             {deck.description || "No description available."}
           </Typography>
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-            <Typography variant="caption" sx={{ color: "text.secondary" }}>
-              {deck.card_count || 0} cards
-            </Typography>
-            <Typography variant="caption" sx={{ color: "text.secondary" }}>
-              Last studied: {deck.last_studied || "Never"}
-            </Typography>
-          </Box>
           {deck.mastery !== undefined && (
             <Box sx={{ mb: 2 }}>
               <Box
@@ -132,35 +116,31 @@ const DeckCard = ({
           }}
         >
           <Box>
-            {!is_default && (
-              <IconButton
-                size="small"
-                onClick={(e) => onEdit(e, deck)}
-                sx={{
-                  mr: 1,
-                  color: "text.secondary",
-                  "&:hover": { color: "primary.main" },
-                }}
-              >
-                <Pencil size={18} />
-              </IconButton>
-            )}
+            <IconButton
+              size="small"
+              onClick={(e) => onEdit(e, deck)}
+              sx={{
+                mr: 1,
+                color: "text.secondary",
+                "&:hover": { color: "primary.main" },
+              }}
+            >
+              <Pencil size={18} />
+            </IconButton>
 
-            {!is_default && (
-              <IconButton
-                size="small"
-                onClick={(e) => onDelete(e, deck.id)}
-                sx={{ color: "error.main", "&:hover": { color: "error.dark" } }}
-              >
-                <Trash2 size={18} />
-              </IconButton>
-            )}
+            <IconButton
+              size="small"
+              onClick={(e) => onDelete(e, deck.id)}
+              sx={{ color: "error.main", "&:hover": { color: "error.dark" } }}
+            >
+              <Trash2 size={18} />
+            </IconButton>
           </Box>
           <Box sx={{ display: "flex", gap: 2 }}>
             <Button
               variant="outlined"
-              startIcon={<Eye size={18} />} 
-              onClick={() => navigate(`/mydecks/${deck.id}`)} 
+              startIcon={<Eye size={18} />}
+              onClick={() => navigate(`/mydecks/${deck.id}`)}
               sx={{
                 borderColor: "primary.main",
                 color: "primary.main",

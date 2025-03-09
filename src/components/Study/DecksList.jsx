@@ -39,87 +39,71 @@ const DeckCard = ({ deck, onClick }) => {
   return (
     <Card
       sx={{
+        borderRadius: 3,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        borderRadius: 2,
-        transition: "transform 0.2s",
+        transition: "all 0.3s ease",
         "&:hover": {
-          transform: "translateY(-4px)",
-          boxShadow: 4,
+          boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
         },
       }}
     >
-      <Box
-        sx={{
-          p: 2,
-          bgcolor:
-            theme.palette.mode === "dark" ? "primary.dark" : "primary.light",
-          color: "primary.contrastText",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
+      <CardContent
+        sx={{ p: 0, flexGrow: 1, display: "flex", flexDirection: "column" }}
       >
-        <Typography variant="h6" fontWeight="bold">
-          {deck.title}
-        </Typography>
-        <BookOpen size={20} />
-      </Box>
-      <CardContent sx={{ flexGrow: 1 }}>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{
-            mb: 2,
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            height: "40px",
-          }}
-        >
-          {deck.description}
-        </Typography>
-        <Divider sx={{ my: 1.5 }} />
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            mt: 1,
-          }}
-        >
-          <Chip
-            label={deck.subject}
-            size="small"
+        {/* Header Section */}
+        <Box sx={{ p: 3, borderBottom: 1, borderColor: "divider" }}>
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: "bold", color: "text.primary" }}
+          >
+            {deck.title}
+          </Typography>
+        </Box>
+
+        {/* Body Section */}
+        <Box sx={{ p: 3, flexGrow: 1 }}>
+          {/* Description */}
+          <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
+            {deck.description || "No description available."}
+          </Typography>
+
+          {/* Subject Chip */}
+          <Box sx={{ display: "flex", justifyContent: "flex-start", mb: 2 }}>
+            <Chip
+              label={deck.subject}
+              size="small"
+              sx={{
+                bgcolor: "accent.light",
+                color: "text.primary",
+                fontWeight: 500,
+              }}
+            />
+          </Box>
+        </Box>
+
+        {/* Footer Section */}
+        <Box sx={{ p: 2, borderTop: 1, borderColor: "divider" }}>
+          <Button
+            variant="contained"
+            fullWidth
+            startIcon={<PlayCircle size={18} />}
+            onClick={onClick}
             sx={{
-              bgcolor: "accent.light",
-              color: "text.primary",
-              fontWeight: 500,
+              bgcolor: "primary.main",
+              color: "primary.contrastText",
+              "&:hover": {
+                bgcolor: "primary.dark",
+              },
+              borderRadius: 2,
             }}
-          />
+          >
+            Study Now
+          </Button>
         </Box>
       </CardContent>
-      <Box sx={{ p: 2, borderTop: 1, borderColor: "divider" }}>
-        <Button
-          variant="contained"
-          fullWidth
-          startIcon={<PlayCircle size={18} />}
-          onClick={onClick}
-          sx={{
-            bgcolor: "primary.main",
-            color: "primary.contrastText",
-            "&:hover": {
-              bgcolor: "primary.dark",
-            },
-            borderRadius: 2,
-          }}
-        >
-          Study Now
-        </Button>
-      </Box>
     </Card>
   );
 };
