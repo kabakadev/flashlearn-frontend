@@ -45,15 +45,15 @@ export default function ThemeToggle({ compact = false }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#ff69b4",
+          backgroundColor: "#4255ff", // Updated to blue
         }}
         animate={{ x: isDark ? (compact ? 16 : 24) : 0 }}
         transition={{ type: "spring", stiffness: 500, damping: 30 }}
       >
         {isDark ? (
-          <Moon className="h-4 w-4 text-pink-200" />
+          <Moon className="h-4 w-4 text-white" /> // Updated text color
         ) : (
-          <Sun className="h-4 w-4 text-pink-200" />
+          <Sun className="h-4 w-4 text-white" /> // Updated text color
         )}
       </motion.div>
     </IconButton>
