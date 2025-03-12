@@ -26,7 +26,7 @@ import {
   LayoutDashboard,
   BookOpen,
   GraduationCap,
-  Menu as MenuIcon,
+  MenuIcon,
 } from "lucide-react";
 import ThemeToggle from "./ThemeComponents/ThemeToggle";
 import { useState } from "react";
@@ -39,6 +39,13 @@ const NavBar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isDarkMode = theme.palette.mode === "dark";
+
+  // Define colors based on theme mode
+  const logoutButtonColor = "#e53935"; // Red
+  const logoutButtonHoverColor = "#c62828"; // Darker red
+  const profileIconColor = "#16C47F"; // green
+  const profileIconTextColor = "#ffffff"; // White text
 
   const handleLogout = async () => {
     await logout();
@@ -101,14 +108,14 @@ const NavBar = () => {
           <ListItem
             onClick={handleLogout}
             sx={{
-              color: "error.main",
+              color: logoutButtonColor, // Red text
               "&:hover": {
-                backgroundColor: "rgba(255, 0, 0, 0.04)",
+                backgroundColor: `${logoutButtonColor}20`, // Light red background on hover with transparency
               },
             }}
           >
             <ListItemIcon sx={{ minWidth: 36 }}>
-              <LogOut size={18} color={theme.palette.error.main} />
+              <LogOut size={18} color={logoutButtonColor} /> {/* Red icon */}
             </ListItemIcon>
             <ListItemText primary="Sign Out" />
           </ListItem>
@@ -135,7 +142,10 @@ const NavBar = () => {
               aria-label="open drawer"
               edge="start"
               onClick={handleDrawerToggle}
-              sx={{ mr: 0 }}
+              sx={{
+                mr: 0,
+                color: "text.nav", // Updated to use navbar-specific text color
+              }}
             >
               <MenuIcon size={22} />
             </IconButton>
@@ -147,7 +157,7 @@ const NavBar = () => {
             to="/dashboard"
             sx={{
               fontWeight: "bold",
-              color: "text.primary",
+              color: "text.nav", // Updated to use navbar-specific text color
               textDecoration: "none",
               display: "flex",
               alignItems: "center",
@@ -155,7 +165,7 @@ const NavBar = () => {
               flexGrow: isMobile ? 1 : 0,
             }}
           >
-            <BookOpen size={isMobile ? 20 : 24} />
+            <BookOpen size={isMobile ? 20 : 24} color="currentColor" />
             Flashlearn
           </Typography>
 
@@ -171,7 +181,7 @@ const NavBar = () => {
                     component={RouterLink}
                     to={item.path}
                     sx={{
-                      color: isActive ? "primary.main" : "text.secondary",
+                      color: isActive ? "primary.main" : "text.nav", // Dark text on lighter navbar
                       "&:hover": {
                         color: "primary.main",
                       },
@@ -193,8 +203,8 @@ const NavBar = () => {
             <IconButton onClick={handleMenuOpen} sx={{ p: 0.5 }}>
               <Avatar
                 sx={{
-                  bgcolor: "primary.main",
-                  color: "primary.contrastText",
+                  bgcolor: profileIconColor, // Orange background
+                  color: profileIconTextColor, // White text
                   width: isMobile ? 32 : 36,
                   height: isMobile ? 32 : 36,
                   fontWeight: "bold",
@@ -209,10 +219,10 @@ const NavBar = () => {
                 onClick={handleLogout}
                 startIcon={<LogOut size={18} />}
                 sx={{
-                  color: theme.palette.primary.contrastText,
-                  bgcolor: theme.palette.primary.main,
+                  color: "#ffffff", // White text
+                  bgcolor: logoutButtonColor, // Red background
                   "&:hover": {
-                    bgcolor: theme.palette.primary.dark,
+                    bgcolor: logoutButtonHoverColor, // Darker red on hover
                   },
                   textTransform: "none",
                   fontSize: "0.875rem",
