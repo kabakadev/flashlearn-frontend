@@ -39,6 +39,7 @@ const StudyMode = () => {
     handleMarkAsLearned,
     getCardProgress,
     answeredCards,
+    handleFinishSession,
   } = useStudySession(deckId, API_URL, startTimeRef, sessionStartTimeRef);
   useEffect(() => {
     const handleKeyPress = (e) => {
@@ -163,6 +164,8 @@ const StudyMode = () => {
           handleFlashcardResponse={handleFlashcardResponse}
           cardProgress={cardProgress}
           handleMarkAsLearned={handleMarkAsLearned}
+          handleFinishSession={handleFinishSession}
+          answeredCards={answeredCards}
         />
 
         <StudySummary

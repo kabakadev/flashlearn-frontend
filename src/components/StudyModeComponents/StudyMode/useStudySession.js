@@ -119,34 +119,22 @@ export const useStudySession = (
           incorrectAnswers: prev.incorrectAnswers + (wasCorrect ? 0 : 1),
           timeSpent: prev.timeSpent + timeSpent,
         }));
-
-        if (currentFlashcardIndex < flashcards.length - 1) {
-          setCurrentFlashcardIndex(currentFlashcardIndex + 1);
-          setShowAnswer(false);
-          startTimeRef.current = Date.now();
-        } else {
-          const totalTimeSpent =
-            (Date.now() - sessionStartTimeRef.current) / 60000;
-          setSessionStats((prev) => ({
-            ...prev,
-            timeSpent: totalTimeSpent,
-          }));
-          setShowSummary(true);
-        }
       } catch (error) {
         console.error("Error updating progress:", error);
         setError("Failed to save your progress. Please try again.");
       }
     },
-    [
-      API_URL,
-      currentFlashcardIndex,
-      deckId,
-      flashcards,
-      sessionStartTimeRef,
-      startTimeRef,
-    ]
+    [API_URL, currentFlashcardIndex, deckId, flashcards, startTimeRef]
   );
+
+  const handleFinishSession = useCallback(() => {
+    const totalTimeSpent = (Date.now() - sessionStartTimeRef.current) / 60000;
+    setSessionStats((prev) => ({
+      ...prev,
+      timeSpent: totalTimeSpent,
+    }));
+    setShowSummary(true);
+  }, [sessionStartTimeRef]);
 
   const handleMarkAsLearned = useCallback(async () => {
     const currentFlashcard = flashcards[currentFlashcardIndex];
@@ -241,5 +229,6 @@ export const useStudySession = (
     getCardProgress,
     answeredCards,
     handleRestartStudy,
+    handleFinishSession,
   };
 };
