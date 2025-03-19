@@ -23,6 +23,8 @@ export const useStudySession = (
   });
   const [showSummary, setShowSummary] = useState(false);
   const [deck, setDeck] = useState(null);
+  const [answeredCards, setAnsweredCards] = useState(new Set());
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -107,6 +109,10 @@ export const useStudySession = (
         });
 
         if (!response.ok) throw new Error("Failed to update progress");
+
+        // Track answered card
+        setAnsweredCards((prev) => new Set(prev).add(currentFlashcardIndex));
+
         setSessionStats((prev) => ({
           ...prev,
           correctAnswers: prev.correctAnswers + (wasCorrect ? 1 : 0),
@@ -117,7 +123,7 @@ export const useStudySession = (
         if (currentFlashcardIndex < flashcards.length - 1) {
           setCurrentFlashcardIndex(currentFlashcardIndex + 1);
           setShowAnswer(false);
-          startTimeRef.current = Date.now(); 
+          startTimeRef.current = Date.now();
         } else {
           const totalTimeSpent =
             (Date.now() - sessionStartTimeRef.current) / 60000;
@@ -201,6 +207,21 @@ export const useStudySession = (
     }
   }, [API_URL, currentFlashcardIndex, deckId, flashcards]);
 
+  const handleRestartStudy = useCallback(() => {
+    setShowSummary(false);
+    setCurrentFlashcardIndex(0);
+    setShowAnswer(false);
+    setAnsweredCards(new Set());
+    startTimeRef.current = Date.now();
+    setSessionStats({
+      totalCards: flashcards.length,
+      correctAnswers: 0,
+      incorrectAnswers: 0,
+      timeSpent: 0,
+      cardsLearned: 0,
+    });
+  }, [flashcards.length]);
+
   return {
     deck,
     flashcards,
@@ -218,5 +239,7 @@ export const useStudySession = (
     handleFlashcardResponse,
     handleMarkAsLearned,
     getCardProgress,
+    answeredCards,
+    handleRestartStudy,
   };
 };

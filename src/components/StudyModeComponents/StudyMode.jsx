@@ -38,16 +38,15 @@ const StudyMode = () => {
     handleFlashcardResponse,
     handleMarkAsLearned,
     getCardProgress,
+    answeredCards,
   } = useStudySession(deckId, API_URL, startTimeRef, sessionStartTimeRef);
   useEffect(() => {
     const handleKeyPress = (e) => {
       if (e.key === " " || e.key === "Enter") {
         e.preventDefault();
-        if (!showAnswer) {
-          setShowAnswer(true);
-        }
+        setShowAnswer(!showAnswer);
       } else if (e.key === "ArrowRight") {
-        if (showAnswer) {
+        if (showAnswer && !answeredCards.has(currentFlashcardIndex)) {
           handleFlashcardResponse(true);
         } else if (currentFlashcardIndex < flashcards.length - 1) {
           setCurrentFlashcardIndex(currentFlashcardIndex + 1);
@@ -55,14 +54,14 @@ const StudyMode = () => {
           startTimeRef.current = Date.now();
         }
       } else if (e.key === "ArrowLeft") {
-        if (showAnswer) {
+        if (showAnswer && !answeredCards.has(currentFlashcardIndex)) {
           handleFlashcardResponse(false);
         } else if (currentFlashcardIndex > 0) {
           setCurrentFlashcardIndex(currentFlashcardIndex - 1);
           setShowAnswer(false);
           startTimeRef.current = Date.now();
         }
-      } else if (showAnswer) {
+      } else if (showAnswer && !answeredCards.has(currentFlashcardIndex)) {
         if (e.key === "1") {
           handleFlashcardResponse(true);
         } else if (e.key === "0") {
@@ -80,6 +79,7 @@ const StudyMode = () => {
     handleFlashcardResponse,
     setCurrentFlashcardIndex,
     setShowAnswer,
+    answeredCards,
   ]);
 
   const handleExitStudy = () => {

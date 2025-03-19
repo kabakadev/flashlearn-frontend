@@ -6,6 +6,7 @@ import {
   ThumbsDown,
   Trophy,
 } from "lucide-react";
+import React from "react";
 
 const StudyActions = ({
   showAnswer,
@@ -18,6 +19,16 @@ const StudyActions = ({
   cardProgress,
   handleMarkAsLearned,
 }) => {
+  // Track answered cards in the current session
+  const [answeredCards, setAnsweredCards] = React.useState(new Set());
+
+  const isCurrentCardAnswered = answeredCards.has(currentFlashcardIndex);
+
+  const handleResponse = (wasCorrect) => {
+    setAnsweredCards((prev) => new Set(prev).add(currentFlashcardIndex));
+    handleFlashcardResponse(wasCorrect);
+  };
+
   return (
     <Box sx={{ mt: 4, display: "flex", justifyContent: "center", gap: 2 }}>
       <Box
@@ -90,36 +101,53 @@ const StudyActions = ({
         </Button>
       ) : (
         <>
-          <Tooltip title="Press Left Arrow or 0">
+          {!isCurrentCardAnswered ? (
+            <>
+              <Tooltip title="Press Left Arrow or 0">
+                <Button
+                  variant="contained"
+                  size="large"
+                  color="error"
+                  onClick={() => handleResponse(false)}
+                  startIcon={<ThumbsDown size={20} />}
+                  sx={{
+                    minWidth: 160,
+                    py: 1.5,
+                  }}
+                >
+                  Incorrect
+                </Button>
+              </Tooltip>
+              <Tooltip title="Press Right Arrow or 1">
+                <Button
+                  variant="contained"
+                  size="large"
+                  color="success"
+                  onClick={() => handleResponse(true)}
+                  startIcon={<ThumbsUp size={20} />}
+                  sx={{
+                    minWidth: 160,
+                    py: 1.5,
+                  }}
+                >
+                  Correct
+                </Button>
+              </Tooltip>
+            </>
+          ) : (
             <Button
               variant="contained"
               size="large"
-              color="error"
-              onClick={() => handleFlashcardResponse(false)}
-              startIcon={<ThumbsDown size={20} />}
+              onClick={() => setShowAnswer(false)}
+              startIcon={<Rotate3D size={20} />}
               sx={{
-                minWidth: 160,
+                minWidth: 200,
                 py: 1.5,
               }}
             >
-              Incorrect
+              Show Question
             </Button>
-          </Tooltip>
-          <Tooltip title="Press Right Arrow or 1">
-            <Button
-              variant="contained"
-              size="large"
-              color="success"
-              onClick={() => handleFlashcardResponse(true)}
-              startIcon={<ThumbsUp size={20} />}
-              sx={{
-                minWidth: 160,
-                py: 1.5,
-              }}
-            >
-              Correct
-            </Button>
-          </Tooltip>
+          )}
         </>
       )}
     </Box>
