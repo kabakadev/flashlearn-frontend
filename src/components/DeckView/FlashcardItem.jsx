@@ -8,11 +8,22 @@ import {
   Box,
   IconButton,
   Tooltip,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { Pencil, Trash2, Repeat } from "lucide-react";
 
-const FlashcardItem = ({ flashcard, onEdit, onDelete }) => {
+const FlashcardItem = ({
+  flashcard,
+  onEdit,
+  onDelete,
+  isMobile: propIsMobile,
+}) => {
+  const theme = useTheme();
+  const systemIsMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = propIsMobile !== undefined ? propIsMobile : systemIsMobile;
+
   const [previewSide, setPreviewSide] = useState("front");
 
   const toggleCardSide = () => {
@@ -23,7 +34,7 @@ const FlashcardItem = ({ flashcard, onEdit, onDelete }) => {
     <motion.div whileHover={{ y: -5, transition: { duration: 0.2 } }}>
       <Card
         sx={{
-          borderRadius: 3,
+          borderRadius: { xs: 2, sm: 3 },
           boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
           height: "100%",
           display: "flex",
@@ -44,7 +55,7 @@ const FlashcardItem = ({ flashcard, onEdit, onDelete }) => {
         >
           <Box
             sx={{
-              p: 3,
+              p: { xs: 2, sm: 3 },
               borderBottom: 1,
               borderColor: "divider",
             }}
@@ -54,7 +65,7 @@ const FlashcardItem = ({ flashcard, onEdit, onDelete }) => {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                mb: 2,
+                mb: { xs: 1, sm: 2 },
               }}
             >
               <Typography
@@ -62,9 +73,10 @@ const FlashcardItem = ({ flashcard, onEdit, onDelete }) => {
                 sx={{
                   color: "text.secondary",
                   bgcolor: "background.default",
-                  px: 1,
-                  py: 0.5,
+                  px: { xs: 0.75, sm: 1 },
+                  py: { xs: 0.25, sm: 0.5 },
                   borderRadius: 1,
+                  fontSize: { xs: "0.625rem", sm: "0.75rem" },
                 }}
               >
                 {previewSide === "front" ? "Question" : "Answer"}
@@ -79,9 +91,10 @@ const FlashcardItem = ({ flashcard, onEdit, onDelete }) => {
                       bgcolor: "primary.main",
                       color: "primary.contrastText",
                     },
+                    padding: { xs: 0.5, sm: 0.75 },
                   }}
                 >
-                  <Repeat size={16} />
+                  <Repeat size={isMobile ? 14 : 16} />
                 </IconButton>
               </Tooltip>
             </Box>
@@ -89,9 +102,13 @@ const FlashcardItem = ({ flashcard, onEdit, onDelete }) => {
               variant="body1"
               sx={{
                 color: "text.primary",
-                minHeight: "80px",
+                minHeight: { xs: "60px", sm: "80px" },
                 display: "flex",
-                alignItems: "center",
+                alignItems: "flex-start",
+                fontSize: { xs: "0.875rem", sm: "1rem" },
+                lineHeight: 1.5,
+                wordBreak: "break-word",
+                whiteSpace: "pre-line",
               }}
             >
               {previewSide === "front"
@@ -101,7 +118,7 @@ const FlashcardItem = ({ flashcard, onEdit, onDelete }) => {
           </Box>
           <Box
             sx={{
-              p: 2,
+              p: { xs: 1.5, sm: 2 },
               borderTop: 1,
               borderColor: "divider",
               display: "flex",
@@ -118,9 +135,10 @@ const FlashcardItem = ({ flashcard, onEdit, onDelete }) => {
                     mr: 1,
                     color: "text.secondary",
                     "&:hover": { color: "primary.main" },
+                    padding: { xs: 0.5, sm: 0.75 },
                   }}
                 >
-                  <Pencil size={18} />
+                  <Pencil size={isMobile ? 16 : 18} />
                 </IconButton>
               </Tooltip>
 
@@ -131,9 +149,10 @@ const FlashcardItem = ({ flashcard, onEdit, onDelete }) => {
                   sx={{
                     color: "error.main",
                     "&:hover": { color: "error.dark" },
+                    padding: { xs: 0.5, sm: 0.75 },
                   }}
                 >
-                  <Trash2 size={18} />
+                  <Trash2 size={isMobile ? 16 : 18} />
                 </IconButton>
               </Tooltip>
             </Box>

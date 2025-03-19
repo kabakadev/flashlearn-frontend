@@ -9,6 +9,7 @@ import {
   useTheme,
   Alert,
   CircularProgress,
+  useMediaQuery,
 } from "@mui/material";
 import NavBar from "../NavBar";
 import DeckHeader from "./DeckHeader";
@@ -28,6 +29,8 @@ const DeckView = () => {
   const { deckId } = useParams();
   const navigate = useNavigate();
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
 
   const [deck, setDeck] = useState(null);
   const [flashcards, setFlashcards] = useState([]);
@@ -104,6 +107,7 @@ const DeckView = () => {
     setFlashcardToDelete(flashcardId);
     setDeleteConfirmationOpen(true);
   };
+
   const handleDeleteConfirm = async () => {
     if (!flashcardToDelete) return;
 
@@ -143,18 +147,34 @@ const DeckView = () => {
   }
 
   return (
-    <Box sx={{ bgcolor: "background.default", minHeight: "100vh", pb: 8 }}>
-      {console.log("this is the deck", deck)}
+    <Box
+      sx={{
+        bgcolor: "background.default",
+        minHeight: "100vh",
+        pb: { xs: 4, sm: 8 },
+      }}
+    >
       <NavBar />
-      <Container maxWidth="xl" sx={{ mt: 4 }}>
+      <Container
+        maxWidth="xl"
+        sx={{
+          mt: { xs: 2, sm: 3, md: 4 },
+          px: { xs: 2, sm: 3, md: 4 },
+        }}
+      >
         <DeckHeader
           deck={deck}
           onAddFlashcard={handleAddFlashcard}
           navigate={navigate}
+          isMobile={isMobile}
         />
 
         {error && (
-          <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError("")}>
+          <Alert
+            severity="error"
+            sx={{ mb: { xs: 2, sm: 3 } }}
+            onClose={() => setError("")}
+          >
             {error}
           </Alert>
         )}
@@ -170,6 +190,7 @@ const DeckView = () => {
           deckId={deckId}
           onAddFlashcard={handleAddFlashcard}
           is_default={deck?.is_default}
+          isMobile={isMobile}
         />
 
         <EditFlashcardModal
@@ -182,6 +203,7 @@ const DeckView = () => {
           onSave={handleEditFlashcard}
           error={error}
           setError={setError}
+          isMobile={isMobile}
         />
 
         <AddFlashcardModal
@@ -195,13 +217,16 @@ const DeckView = () => {
           onSave={handleSaveFlashcard}
           error={error}
           setError={setError}
+          isMobile={isMobile}
         />
+
         <ConfirmationDialog
           open={deleteConfirmationOpen}
           onClose={handleDeleteCancel}
           onConfirm={handleDeleteConfirm}
           title="Delete Flashcard"
           message="Are you sure you want to delete this flashcard? This action cannot be undone."
+          isMobile={isMobile}
         />
       </Container>
     </Box>
