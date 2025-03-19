@@ -9,6 +9,7 @@ import {
   Grid,
   useTheme,
   CircularProgress,
+  useMediaQuery,
 } from "@mui/material";
 import NavBar from "./NavBar";
 
@@ -24,6 +25,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [decks, setDecks] = useState([]);
   const [progress, setProgress] = useState([]);
   const [stats, setStats] = useState({});
@@ -53,6 +55,7 @@ const Dashboard = () => {
 
     fetchData();
   }, [user]);
+
   const fetchUserStats = async (token) => {
     try {
       const response = await fetch(`${API_URL}/dashboard`, {
@@ -79,6 +82,7 @@ const Dashboard = () => {
       console.error("Error fetching dashboard data:", error);
     }
   };
+
   const fetchDecks = async (token) => {
     const response = await fetch(`${API_URL}/decks`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -172,10 +176,17 @@ const Dashboard = () => {
   return (
     <Box sx={{ bgcolor: "background.default", minHeight: "100vh", pb: 8 }}>
       <NavBar />
-      <Container maxWidth="xl" sx={{ mt: 4 }}>
+      <Container
+        maxWidth="xl"
+        sx={{
+          mt: { xs: 2, sm: 3, md: 4 },
+          px: { xs: 2, sm: 3, md: 4 },
+        }}
+      >
         <WelcomeSection username={user?.username} />
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={8}>
+        <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
+          {/* Main content - takes full width on mobile, 8/12 on larger screens */}
+          <Grid item xs={12} md={8} order={{ xs: 2, md: 1 }}>
             <ProgressCard stats={stats} theme={theme} isDarkMode={isDarkMode} />
             <DecksSection
               decks={decks}
@@ -184,9 +195,13 @@ const Dashboard = () => {
               theme={theme}
             />
           </Grid>
-          <Grid item xs={12} md={4}>
+
+          {/* Sidebar content - takes full width on mobile, 4/12 on larger screens */}
+          <Grid item xs={12} md={4} order={{ xs: 1, md: 2 }}>
             <QuickStudyCard />
-            <LearningTipsCard />
+            <Box sx={{ mt: { xs: 2, sm: 3, md: 4 } }}>
+              <LearningTipsCard />
+            </Box>
           </Grid>
         </Grid>
       </Container>
