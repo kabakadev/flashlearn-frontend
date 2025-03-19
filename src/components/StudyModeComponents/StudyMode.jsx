@@ -172,7 +172,6 @@ const StudyMode = () => {
           showSummary={showSummary}
           sessionStats={sessionStats}
           handleExitStudy={handleExitStudy}
-          handleRestartStudy={handleRestartStudy}
         />
       </Container>
     </Box>

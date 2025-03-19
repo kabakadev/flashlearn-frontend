@@ -195,21 +195,6 @@ export const useStudySession = (
     }
   }, [API_URL, currentFlashcardIndex, deckId, flashcards]);
 
-  const handleRestartStudy = useCallback(() => {
-    setShowSummary(false);
-    setCurrentFlashcardIndex(0);
-    setShowAnswer(false);
-    setAnsweredCards(new Set());
-    startTimeRef.current = Date.now();
-    setSessionStats({
-      totalCards: flashcards.length,
-      correctAnswers: 0,
-      incorrectAnswers: 0,
-      timeSpent: 0,
-      cardsLearned: 0,
-    });
-  }, [flashcards.length]);
-
   return {
     deck,
     flashcards,
@@ -228,7 +213,6 @@ export const useStudySession = (
     handleMarkAsLearned,
     getCardProgress,
     answeredCards,
-    handleRestartStudy,
     handleFinishSession,
   };
 };
