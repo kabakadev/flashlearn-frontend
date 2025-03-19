@@ -10,6 +10,10 @@ const FlashcardDisplay = ({
   setShowAnswer,
   cardProgress,
 }) => {
+  const handleCardClick = () => {
+    setShowAnswer(!showAnswer);
+  };
+
   return (
     <Box sx={{ perspective: "1000px" }}>
       <AnimatePresence mode="wait">
@@ -35,7 +39,7 @@ const FlashcardDisplay = ({
                   `0 0 0 2px ${theme.palette.primary.main}, 0 4px 20px rgba(0,0,0,0.1)`,
               },
             }}
-            onClick={() => !showAnswer && setShowAnswer(true)}
+            onClick={handleCardClick}
           >
             <CardContent sx={{ width: "100%", textAlign: "center" }}>
               <Typography variant="h5" sx={{ mb: 2, color: "text.primary" }}>
@@ -50,11 +54,10 @@ const FlashcardDisplay = ({
                   : currentFlashcard.front_text}
               </Typography>
 
-              {!showAnswer && (
-                <Typography variant="body2" color="text.secondary">
-                  Click to reveal answer or press Space
-                </Typography>
-              )}
+              <Typography variant="body2" color="text.secondary">
+                {showAnswer ? "Click to see question" : "Click to see answer"}
+              </Typography>
+
               <Box
                 sx={{
                   position: "absolute",
