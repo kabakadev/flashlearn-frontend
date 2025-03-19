@@ -12,6 +12,8 @@ import {
   Button,
   Alert,
   Modal,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { useState } from "react";
 
@@ -30,7 +32,13 @@ const DeckModal = ({
   deckDifficulty,
   setDeckDifficulty,
   onSave,
+  isMobile: propIsMobile,
 }) => {
+  const theme = useTheme();
+  const systemIsMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = propIsMobile !== undefined ? propIsMobile : systemIsMobile;
+  const isVerySmall = useMediaQuery("(max-width:360px)");
+
   const [error, setError] = useState("");
   const [touched, setTouched] = useState({
     deckTitle: false,
@@ -90,30 +98,44 @@ const DeckModal = ({
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: { xs: "90%", sm: 500 },
+          width: { xs: isVerySmall ? "95%" : "90%", sm: 500 },
+          maxHeight: { xs: "90vh", sm: "80vh" },
+          overflow: "auto",
           bgcolor: "background.paper",
-          borderRadius: 3,
+          borderRadius: { xs: 2, sm: 3 },
           boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
-          p: 4,
+          p: { xs: 2, sm: 3, md: 4 },
         }}
       >
         <Typography
-          variant="h5"
+          variant={isMobile ? "h6" : "h5"}
           id="deck-modal-title"
-          sx={{ mb: 3, fontWeight: "bold" }}
+          sx={{
+            mb: { xs: 2, sm: 3 },
+            fontWeight: "bold",
+            fontSize: { xs: "1.1rem", sm: "1.5rem" },
+          }}
         >
           {editingDeck ? "Edit Deck" : "Create New Deck"}
         </Typography>
 
         {error && (
-          <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError("")}>
+          <Alert
+            severity="error"
+            sx={{ mb: { xs: 2, sm: 3 } }}
+            onClose={() => setError("")}
+          >
             {error}
           </Alert>
         )}
 
         <Box
           component="form"
-          sx={{ display: "flex", flexDirection: "column", gap: 3 }}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: { xs: 2, sm: 3 },
+          }}
         >
           <TextField
             label="Deck Title"
@@ -126,6 +148,13 @@ const DeckModal = ({
             helperText={
               touched.deckTitle && !deckTitle.trim() && "Title is required"
             }
+            size={isMobile ? "small" : "medium"}
+            InputLabelProps={{
+              style: { fontSize: isMobile ? "0.875rem" : undefined },
+            }}
+            InputProps={{
+              style: { fontSize: isMobile ? "0.875rem" : undefined },
+            }}
           />
 
           <TextField
@@ -135,7 +164,7 @@ const DeckModal = ({
             onBlur={handleBlur("deckDescription")}
             fullWidth
             multiline
-            rows={3}
+            rows={isMobile ? 2 : 3}
             required
             error={touched.deckDescription && !deckDescription.trim()}
             helperText={
@@ -143,9 +172,16 @@ const DeckModal = ({
               !deckDescription.trim() &&
               "Description is required"
             }
+            size={isMobile ? "small" : "medium"}
+            InputLabelProps={{
+              style: { fontSize: isMobile ? "0.875rem" : undefined },
+            }}
+            InputProps={{
+              style: { fontSize: isMobile ? "0.875rem" : undefined },
+            }}
           />
 
-          <Grid container spacing={2}>
+          <Grid container spacing={isMobile ? 1.5 : 2}>
             <Grid item xs={12} sm={6}>
               <TextField
                 label="Subject"
@@ -160,6 +196,13 @@ const DeckModal = ({
                   !deckSubject.trim() &&
                   "Subject is required"
                 }
+                size={isMobile ? "small" : "medium"}
+                InputLabelProps={{
+                  style: { fontSize: isMobile ? "0.875rem" : undefined },
+                }}
+                InputProps={{
+                  style: { fontSize: isMobile ? "0.875rem" : undefined },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -176,12 +219,21 @@ const DeckModal = ({
                   !deckCategory.trim() &&
                   "Category is required"
                 }
+                size={isMobile ? "small" : "medium"}
+                InputLabelProps={{
+                  style: { fontSize: isMobile ? "0.875rem" : undefined },
+                }}
+                InputProps={{
+                  style: { fontSize: isMobile ? "0.875rem" : undefined },
+                }}
               />
             </Grid>
           </Grid>
 
-          <FormControl fullWidth>
-            <InputLabel>Difficulty Level</InputLabel>
+          <FormControl fullWidth size={isMobile ? "small" : "medium"}>
+            <InputLabel style={{ fontSize: isMobile ? "0.875rem" : undefined }}>
+              Difficulty Level
+            </InputLabel>
             <Select
               value={deckDifficulty}
               onChange={(e) => setDeckDifficulty(Number(e.target.value))}
@@ -189,9 +241,14 @@ const DeckModal = ({
               label="Difficulty Level"
               required
               error={touched.deckDifficulty && !deckDifficulty}
+              style={{ fontSize: isMobile ? "0.875rem" : undefined }}
             >
               {[1, 2, 3, 4, 5].map((level) => (
-                <MenuItem key={level} value={level}>
+                <MenuItem
+                  key={level}
+                  value={level}
+                  style={{ fontSize: isMobile ? "0.875rem" : undefined }}
+                >
                   {level} -{" "}
                   {level === 1
                     ? "Beginner"
@@ -203,7 +260,14 @@ const DeckModal = ({
             </Select>
           </FormControl>
 
-          <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: isVerySmall ? "column" : "row", sm: "row" },
+              gap: { xs: 1, sm: 2 },
+              mt: { xs: 1, sm: 2 },
+            }}
+          >
             <Button
               variant="contained"
               onClick={handleSave}
@@ -214,9 +278,20 @@ const DeckModal = ({
                 "&:hover": {
                   bgcolor: "primary.dark",
                 },
+                fontSize: { xs: "0.8125rem", sm: "0.875rem" },
+                py: { xs: 1, sm: undefined },
+                borderRadius: { xs: 1.5, sm: 2 },
+                order: { xs: isVerySmall ? 2 : 1, sm: 1 },
               }}
+              size={isMobile ? "small" : "medium"}
             >
-              {editingDeck ? "Save Changes" : "Create Deck"}
+              {editingDeck
+                ? isMobile
+                  ? "Save"
+                  : "Save Changes"
+                : isMobile
+                ? "Create"
+                : "Create Deck"}
             </Button>
             <Button
               variant="outlined"
@@ -229,7 +304,12 @@ const DeckModal = ({
                   borderColor: "primary.dark",
                   bgcolor: "rgba(124, 58, 237, 0.04)",
                 },
+                fontSize: { xs: "0.8125rem", sm: "0.875rem" },
+                py: { xs: 1, sm: undefined },
+                borderRadius: { xs: 1.5, sm: 2 },
+                order: { xs: isVerySmall ? 1 : 2, sm: 2 },
               }}
+              size={isMobile ? "small" : "medium"}
             >
               Cancel
             </Button>

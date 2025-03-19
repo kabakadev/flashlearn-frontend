@@ -10,6 +10,7 @@ import {
   useTheme,
   Alert,
   CircularProgress,
+  useMediaQuery,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import NavBar from "./NavBar";
@@ -26,6 +27,9 @@ const MyDecks = () => {
   const { user, isAuthenticated, loading: userLoading } = useUser();
   const navigate = useNavigate();
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
   const [decks, setDecks] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingDeck, setEditingDeck] = useState(null);
@@ -70,6 +74,7 @@ const MyDecks = () => {
 
     loadDecks();
   }, [user]);
+
   const handleCreateOrUpdateDeck = async () => {
     if (!deckTitle.trim()) {
       setError("Deck title is required");
@@ -100,6 +105,7 @@ const MyDecks = () => {
       setError("An error occurred while saving the deck.");
     }
   };
+
   const handleDeleteDeck = (event, deckId) => {
     event.stopPropagation();
     setDeckToDelete(deckId);
@@ -127,6 +133,7 @@ const MyDecks = () => {
     setDeleteConfirmationOpen(false);
     setDeckToDelete(null);
   };
+
   const handleCloseModal = () => {
     setModalOpen(false);
     setEditingDeck(null);
@@ -213,13 +220,29 @@ const MyDecks = () => {
   }
 
   return (
-    <Box sx={{ bgcolor: "background.default", minHeight: "100vh", pb: 8 }}>
+    <Box
+      sx={{
+        bgcolor: "background.default",
+        minHeight: "100vh",
+        pb: { xs: 4, sm: 8 },
+      }}
+    >
       <NavBar />
-      <Container maxWidth="xl" sx={{ mt: 4 }}>
-        <Header onCreateDeck={() => setModalOpen(true)} />
+      <Container
+        maxWidth="xl"
+        sx={{
+          mt: { xs: 2, sm: 3, md: 4 },
+          px: { xs: 2, sm: 3, md: 4 },
+        }}
+      >
+        <Header onCreateDeck={() => setModalOpen(true)} isMobile={isMobile} />
 
         {error && (
-          <Alert severity="error" sx={{ mb: 4 }} onClose={() => setError("")}>
+          <Alert
+            severity="error"
+            sx={{ mb: { xs: 2, sm: 3, md: 4 } }}
+            onClose={() => setError("")}
+          >
             {error}
           </Alert>
         )}
@@ -231,6 +254,7 @@ const MyDecks = () => {
           setFilter={setFilter}
           sortBy={sortBy}
           setSortBy={setSortBy}
+          isMobile={isMobile}
         />
 
         <motion.div
@@ -247,11 +271,15 @@ const MyDecks = () => {
           animate="visible"
         >
           {filteredAndSortedDecks.length === 0 ? (
-            <EmptyState theme={theme} onCreateDeck={() => setModalOpen(true)} />
+            <EmptyState
+              theme={theme}
+              onCreateDeck={() => setModalOpen(true)}
+              isMobile={isMobile}
+            />
           ) : (
-            <Grid container spacing={3}>
+            <Grid container spacing={{ xs: 2, sm: 2, md: 3 }}>
               {filteredAndSortedDecks.map((deck) => (
-                <Grid item xs={12} sm={6} md={4} key={deck.id}>
+                <Grid item xs={6} sm={6} md={4} key={deck.id}>
                   <DeckCard
                     deck={deck}
                     theme={theme}
@@ -259,6 +287,7 @@ const MyDecks = () => {
                     onDelete={handleDeleteDeck}
                     onStudy={handleStudyDeck}
                     navigate={navigate}
+                    isMobile={isMobile}
                   />
                 </Grid>
               ))}
@@ -282,6 +311,7 @@ const MyDecks = () => {
           setDeckDifficulty={setDeckDifficulty}
           error={error}
           onSave={handleCreateOrUpdateDeck}
+          isMobile={isMobile}
         />
         <ConfirmationDialog
           open={deleteConfirmationOpen}
