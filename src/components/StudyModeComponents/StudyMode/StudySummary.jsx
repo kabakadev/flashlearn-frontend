@@ -10,12 +10,7 @@ import {
 import { Trophy, Brain, Target, Clock } from "lucide-react";
 import StatsCard from "./StatsCard";
 
-const StudySummary = ({
-  showSummary,
-  sessionStats,
-  handleExitStudy,
-  handleRestartStudy,
-}) => {
+const StudySummary = ({ showSummary, sessionStats, handleExitStudy }) => {
   return (
     <Dialog open={showSummary} maxWidth="sm" fullWidth>
       <DialogTitle>
@@ -78,11 +73,12 @@ const StudySummary = ({
         </Box>
       </DialogContent>
       <DialogActions sx={{ p: 3, justifyContent: "center" }}>
-        <Button variant="outlined" onClick={handleExitStudy} sx={{ mr: 1 }}>
+        <Button
+          variant="contained"
+          onClick={handleExitStudy}
+          sx={{ minWidth: 200, py: 1.5 }}
+        >
           Back to Study
-        </Button>
-        <Button variant="contained" onClick={handleRestartStudy}>
-          Study Again
         </Button>
       </DialogActions>
     </Dialog>

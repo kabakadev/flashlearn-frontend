@@ -145,6 +145,15 @@ const StudyMode = () => {
           currentIndex={currentFlashcardIndex}
           totalCards={flashcards.length}
           progressPercentage={progressPercentage}
+          onNextCard={() => {
+            if (currentFlashcardIndex < flashcards.length - 1) {
+              setCurrentFlashcardIndex(currentFlashcardIndex + 1);
+              setShowAnswer(false);
+              startTimeRef.current = Date.now();
+            }
+          }}
+          showAnswer={showAnswer}
+          answeredCards={answeredCards}
         />
 
         <FlashcardDisplay
