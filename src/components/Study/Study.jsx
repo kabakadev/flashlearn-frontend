@@ -4,16 +4,27 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import NavBar from "../NavBar";
-import { Box, Container, Typography, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  CircularProgress,
+  Pagination,
+} from "@mui/material";
 import StatsOverview from "./StatsOverview";
 import DecksList from "./DecksList";
 import WeeklyGoalDialog from "./WeeklyGoalDialog";
 import NotificationSnackbar from "./NotificationSnackbar";
+import { fetchDecks } from "../../utils/deckApi";
 
 const Study = () => {
   const { user, isAuthenticated, loading } = useUser();
   const navigate = useNavigate();
   const [decks, setDecks] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const decksPerPage = 6;
   const [userStats, setUserStats] = useState({
     weekly_goal: 50,
     mastery_level: 0,
@@ -38,32 +49,36 @@ const Study = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetchDecks();
+      fetchDecksData();
       fetchUserStats();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, currentPage]);
 
-  const fetchDecks = async () => {
+  const fetchDecksData = async () => {
     try {
-      const response = await fetch(
-        "https://flashlearn-backend-ityf.onrender.com/decks",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
+      const token = localStorage.getItem("authToken");
+      const { decks, pagination } = await fetchDecks(
+        token,
+        currentPage,
+        decksPerPage
       );
-
-      if (response.ok) {
-        const data = await response.json();
-        setDecks(data);
-        setIsLoading(false);
-      } else {
-        console.error("Failed to fetch decks");
-      }
+      setDecks(Array.isArray(decks) ? decks : []);
+      setTotalPages(pagination.total_pages);
+      setTotalItems(pagination.total_items);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching decks:", error);
+      setSnackbar({
+        open: true,
+        message: "Failed to load decks",
+        severity: "error",
+      });
     }
+  };
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+    setIsLoading(true);
   };
 
   const fetchUserStats = async () => {
@@ -182,6 +197,38 @@ const Study = () => {
           onDeckClick={handleDeckClick}
           onCreateDeckClick={() => navigate("/mydecks")}
         />
+
+        {totalPages > 1 && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mt: { xs: 3, sm: 4 },
+              mb: { xs: 2, sm: 3 },
+            }}
+          >
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
+              color="primary"
+              size="medium"
+              sx={{
+                "& .MuiPaginationItem-root": {
+                  color: "text.primary",
+                  "&.Mui-selected": {
+                    bgcolor: "primary.main",
+                    color: "primary.contrastText",
+                    "&:hover": {
+                      bgcolor: "primary.dark",
+                    },
+                  },
+                },
+              }}
+            />
+          </Box>
+        )}
+
         <WeeklyGoalDialog
           open={goalDialogOpen}
           onClose={() => setGoalDialogOpen(false)}

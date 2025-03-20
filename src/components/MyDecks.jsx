@@ -11,6 +11,7 @@ import {
   Alert,
   CircularProgress,
   useMediaQuery,
+  Pagination,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import NavBar from "./NavBar";
@@ -49,6 +50,10 @@ const MyDecks = () => {
   const [sortBy, setSortBy] = useState("title");
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [deckToDelete, setDeckToDelete] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const decksPerPage = 6; // Number of decks to show per page
 
   useEffect(() => {
     if (!userLoading && !isAuthenticated) {
@@ -61,8 +66,14 @@ const MyDecks = () => {
       if (!user) return;
       try {
         const token = localStorage.getItem("authToken");
-        const fetchedDecks = await fetchDecks(token);
-        setDecks(Array.isArray(fetchedDecks) ? fetchedDecks : []);
+        const { decks, pagination } = await fetchDecks(
+          token,
+          currentPage,
+          decksPerPage
+        );
+        setDecks(Array.isArray(decks) ? decks : []);
+        setTotalPages(pagination.total_pages);
+        setTotalItems(pagination.total_items);
       } catch (error) {
         console.error("Error fetching decks:", error);
         setError("An error occurred while loading decks.");
@@ -73,7 +84,7 @@ const MyDecks = () => {
     };
 
     loadDecks();
-  }, [user]);
+  }, [user, currentPage]);
 
   const handleCreateOrUpdateDeck = async () => {
     if (!deckTitle.trim()) {
@@ -204,6 +215,21 @@ const MyDecks = () => {
     [decks]
   );
 
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+    setLoading(true);
+  };
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+    setCurrentPage(1); // Reset to first page when filters change
+  };
+
+  const handleSortChange = (newSortBy) => {
+    setSortBy(newSortBy);
+    setCurrentPage(1); // Reset to first page when sort changes
+  };
+
   if (userLoading || loading) {
     return (
       <Box
@@ -251,9 +277,9 @@ const MyDecks = () => {
           subjects={subjects}
           categories={categories}
           filter={filter}
-          setFilter={setFilter}
+          setFilter={handleFilterChange}
           sortBy={sortBy}
-          setSortBy={setSortBy}
+          setSortBy={handleSortChange}
           isMobile={isMobile}
         />
 
@@ -277,21 +303,53 @@ const MyDecks = () => {
               isMobile={isMobile}
             />
           ) : (
-            <Grid container spacing={{ xs: 2, sm: 2, md: 3 }}>
-              {filteredAndSortedDecks.map((deck) => (
-                <Grid item xs={6} sm={6} md={4} key={deck.id}>
-                  <DeckCard
-                    deck={deck}
-                    theme={theme}
-                    onEdit={handleEditDeck}
-                    onDelete={handleDeleteDeck}
-                    onStudy={handleStudyDeck}
-                    navigate={navigate}
-                    isMobile={isMobile}
+            <>
+              <Grid container spacing={{ xs: 2, sm: 2, md: 3 }}>
+                {filteredAndSortedDecks.map((deck) => (
+                  <Grid item xs={6} sm={6} md={4} key={deck.id}>
+                    <DeckCard
+                      deck={deck}
+                      theme={theme}
+                      onEdit={handleEditDeck}
+                      onDelete={handleDeleteDeck}
+                      onStudy={handleStudyDeck}
+                      navigate={navigate}
+                      isMobile={isMobile}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+              {totalPages > 1 && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    mt: { xs: 3, sm: 4 },
+                    mb: { xs: 2, sm: 3 },
+                  }}
+                >
+                  <Pagination
+                    count={totalPages}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                    color="primary"
+                    size={isMobile ? "small" : "medium"}
+                    sx={{
+                      "& .MuiPaginationItem-root": {
+                        color: "text.primary",
+                        "&.Mui-selected": {
+                          bgcolor: "primary.main",
+                          color: "primary.contrastText",
+                          "&:hover": {
+                            bgcolor: "primary.dark",
+                          },
+                        },
+                      },
+                    }}
                   />
-                </Grid>
-              ))}
-            </Grid>
+                </Box>
+              )}
+            </>
           )}
         </motion.div>
 

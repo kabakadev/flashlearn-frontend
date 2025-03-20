@@ -1,6 +1,10 @@
 const API_URL = "https://flashlearn-backend-ityf.onrender.com";
 
-export const fetchDeckAndFlashcards = async (deckId) => {
+export const fetchDeckAndFlashcards = async (
+  deckId,
+  page = 1,
+  perPage = 10
+) => {
   const token = localStorage.getItem("authToken");
   // Check if deckId is valid
   if (!deckId) {
@@ -14,26 +18,48 @@ export const fetchDeckAndFlashcards = async (deckId) => {
   if (!deckResponse.ok) throw new Error("Failed to fetch deck details");
   const deckData = await deckResponse.json();
 
-  const cardsResponse = await fetch(`${API_URL}/flashcards`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const cardsResponse = await fetch(
+    `${API_URL}/flashcards?page=${page}&per_page=${perPage}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
 
   if (!cardsResponse.ok) throw new Error("Failed to fetch flashcards");
   const cardsData = await cardsResponse.json();
 
   if (cardsData.message === "No flashcards found.") {
-    return { deckData, flashcardsData: [] };
+    return {
+      deckData,
+      flashcardsData: [],
+      pagination: {
+        page: 1,
+        per_page: perPage,
+        total_pages: 1,
+        total_items: 0,
+        has_next: false,
+        has_prev: false,
+      },
+    };
   }
 
-  if (!Array.isArray(cardsData)) {
-    return { deckData, flashcardsData: [] };
+  if (!Array.isArray(cardsData.items)) {
+    return {
+      deckData,
+      flashcardsData: [],
+      pagination: cardsData.pagination,
+    };
   }
 
-  const flashcardsData = cardsData.filter(
+  const flashcardsData = cardsData.items.filter(
     (card) => card.deck_id === Number.parseInt(deckId)
   );
 
-  return { deckData, flashcardsData };
+  return {
+    deckData,
+    flashcardsData,
+    pagination: cardsData.pagination,
+  };
 };
 
 export const addFlashcard = async (deckId, newFlashcard) => {
@@ -102,20 +128,37 @@ export const createOrUpdateDeck = async (deck, isEditing) => {
   return response.json();
 };
 
-export const fetchDecks = async (token) => {
+export const fetchDecks = async (token, page = 1, perPage = 10) => {
   try {
-    const response = await fetch(`${API_URL}/decks`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await fetch(
+      `${API_URL}/decks?page=${page}&per_page=${perPage}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
     if (!response.ok) throw new Error("Failed to fetch decks");
 
     const data = await response.json();
-    return Array.isArray(data) ? data : [];
+    return {
+      decks: Array.isArray(data.items) ? data.items : [],
+      pagination: data.pagination,
+    };
   } catch (error) {
-    return [];
+    return {
+      decks: [],
+      pagination: {
+        page: 1,
+        per_page: perPage,
+        total_pages: 1,
+        total_items: 0,
+        has_next: false,
+        has_prev: false,
+      },
+    };
   }
 };
+
 export const deleteDeck = async (deckId) => {
   const token = localStorage.getItem("authToken");
   const response = await fetch(`${API_URL}/decks/${deckId}`, {
