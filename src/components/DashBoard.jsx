@@ -19,6 +19,7 @@ import QuickStudyCard from "./Dashboard/QuickStudyCard";
 import LearningTipsCard from "./Dashboard/LeadingTipsCard";
 import { calculateStudyStreak, getDeckStats } from "../utils/dashBoardutil";
 import DecksSection from "./Dashboard/DeckSection";
+import { fetchDecks } from "../utils/deckApi";
 
 const Dashboard = () => {
   const { user, isAuthenticated, loading } = useUser();
@@ -42,7 +43,7 @@ const Dashboard = () => {
       if (!user) return;
       try {
         const token = localStorage.getItem("authToken");
-        const decksData = await fetchDecks(token);
+        const decksData = await fetchDecksData(token);
         const progressData = await fetchProgress(token);
         const userStats = await fetchUserStats(token);
         setDecks(decksData);
@@ -83,13 +84,14 @@ const Dashboard = () => {
     }
   };
 
-  const fetchDecks = async (token) => {
-    const response = await fetch(`${API_URL}/decks`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!response.ok) throw new Error("Failed to fetch decks");
-    const data = await response.json();
-    return Array.isArray(data) ? data : [];
+  const fetchDecksData = async (token) => {
+    try {
+      const { decks, pagination } = await fetchDecks(token, 1, 10); // Fetch first page with 10 decks
+      return decks;
+    } catch (error) {
+      console.error("Error fetching decks:", error);
+      return [];
+    }
   };
 
   const fetchProgress = async (token) => {

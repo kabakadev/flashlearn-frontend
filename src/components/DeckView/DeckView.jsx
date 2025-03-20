@@ -10,6 +10,7 @@ import {
   Alert,
   CircularProgress,
   useMediaQuery,
+  Pagination,
 } from "@mui/material";
 import NavBar from "../NavBar";
 import DeckHeader from "./DeckHeader";
@@ -45,6 +46,10 @@ const DeckView = () => {
   const [error, setError] = useState("");
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [flashcardToDelete, setFlashcardToDelete] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const cardsPerPage = 10; // Number of cards to show per page
 
   useEffect(() => {
     if (!userLoading && !isAuthenticated) {
@@ -56,11 +61,12 @@ const DeckView = () => {
     const loadDeckAndFlashcards = async () => {
       if (!user) return;
       try {
-        const { deckData, flashcardsData } = await fetchDeckAndFlashcards(
-          deckId
-        );
+        const { deckData, flashcardsData, pagination } =
+          await fetchDeckAndFlashcards(deckId, currentPage, cardsPerPage);
         setDeck(deckData);
         setFlashcards(Array.isArray(flashcardsData) ? flashcardsData : []);
+        setTotalPages(pagination.total_pages);
+        setTotalItems(pagination.total_items);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError("Failed to load deck data. Please try again later.");
@@ -70,7 +76,7 @@ const DeckView = () => {
     };
 
     loadDeckAndFlashcards();
-  }, [deckId, user]);
+  }, [deckId, user, currentPage]);
 
   const handleAddFlashcard = () => {
     setAddModalOpen(true);
@@ -129,6 +135,11 @@ const DeckView = () => {
   const handleDeleteCancel = () => {
     setDeleteConfirmationOpen(false);
     setFlashcardToDelete(null);
+  };
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+    setLoading(true);
   };
 
   if (userLoading || loading) {
@@ -192,6 +203,37 @@ const DeckView = () => {
           is_default={deck?.is_default}
           isMobile={isMobile}
         />
+
+        {totalPages > 1 && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mt: { xs: 3, sm: 4 },
+              mb: { xs: 2, sm: 3 },
+            }}
+          >
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
+              color="primary"
+              size={isMobile ? "small" : "medium"}
+              sx={{
+                "& .MuiPaginationItem-root": {
+                  color: "text.primary",
+                  "&.Mui-selected": {
+                    bgcolor: "primary.main",
+                    color: "primary.contrastText",
+                    "&:hover": {
+                      bgcolor: "primary.dark",
+                    },
+                  },
+                },
+              }}
+            />
+          </Box>
+        )}
 
         <EditFlashcardModal
           open={modalOpen}
