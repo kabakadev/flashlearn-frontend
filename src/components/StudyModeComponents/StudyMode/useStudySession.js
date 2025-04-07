@@ -40,7 +40,7 @@ export const useStudySession = (
         setDeck(deckData);
 
         //fetch deck-specific flashcards
-        const flashcardsResponse = await fetch(`${API_URL}/flashcards?deck_id=${deckId}`, {
+        const flashcardsResponse = await fetch(`${API_URL}/flashcards?deck_id=${deckId}&all=true`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
