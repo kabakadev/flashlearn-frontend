@@ -41,28 +41,44 @@ const StudyMode = () => {
     answeredCards,
     handleFinishSession,
   } = useStudySession(deckId, API_URL, startTimeRef, sessionStartTimeRef);
+
+  // Helper function to check if current card is answered
+  const isCurrentCardAnswered = () => {
+    if (!flashcards[currentFlashcardIndex]) return false;
+    return answeredCards.has(flashcards[currentFlashcardIndex].id);
+  };
+
   useEffect(() => {
     const handleKeyPress = (e) => {
+      const currentCard = flashcards[currentFlashcardIndex];
+      if (!currentCard) return;
+
       if (e.key === " " || e.key === "Enter") {
         e.preventDefault();
         setShowAnswer(!showAnswer);
-      } else if (e.key === "ArrowRight") {
-        if (showAnswer && !answeredCards.has(currentFlashcardIndex)) {
+      } 
+      // Right arrow - move to next card or submit correct answer
+      else if (e.key === "ArrowRight") {
+        if (showAnswer && !isCurrentCardAnswered()) {
           handleFlashcardResponse(true);
         } else if (currentFlashcardIndex < flashcards.length - 1) {
           setCurrentFlashcardIndex(currentFlashcardIndex + 1);
           setShowAnswer(false);
           startTimeRef.current = Date.now();
         }
-      } else if (e.key === "ArrowLeft") {
-        if (showAnswer && !answeredCards.has(currentFlashcardIndex)) {
+      } 
+      // Left arrow - move to previous card or submit incorrect answer
+      else if (e.key === "ArrowLeft") {
+        if (showAnswer && !isCurrentCardAnswered()) {
           handleFlashcardResponse(false);
         } else if (currentFlashcardIndex > 0) {
           setCurrentFlashcardIndex(currentFlashcardIndex - 1);
           setShowAnswer(false);
           startTimeRef.current = Date.now();
         }
-      } else if (showAnswer && !answeredCards.has(currentFlashcardIndex)) {
+      } 
+      // Number keys for direct response
+      else if (showAnswer && !isCurrentCardAnswered()) {
         if (e.key === "1") {
           handleFlashcardResponse(true);
         } else if (e.key === "0") {
@@ -76,7 +92,7 @@ const StudyMode = () => {
   }, [
     showAnswer,
     currentFlashcardIndex,
-    flashcards.length,
+    flashcards,
     handleFlashcardResponse,
     setCurrentFlashcardIndex,
     setShowAnswer,
@@ -165,7 +181,7 @@ const StudyMode = () => {
           cardProgress={cardProgress}
           handleMarkAsLearned={handleMarkAsLearned}
           handleFinishSession={handleFinishSession}
-          answeredCards={answeredCards}
+          isCurrentCardAnswered={isCurrentCardAnswered()}
         />
 
         <StudySummary

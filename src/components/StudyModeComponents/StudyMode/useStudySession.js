@@ -29,6 +29,8 @@ export const useStudySession = (
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("authToken");
+
+        //fetch deck
         const deckResponse = await fetch(`${API_URL}/decks/${deckId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -36,7 +38,9 @@ export const useStudySession = (
         if (!deckResponse.ok) throw new Error("Failed to fetch deck details");
         const deckData = await deckResponse.json();
         setDeck(deckData);
-        const flashcardsResponse = await fetch(`${API_URL}/flashcards`, {
+
+        //fetch deck-specific flashcards
+        const flashcardsResponse = await fetch(`${API_URL}/flashcards?deck_id=${deckId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -44,13 +48,16 @@ export const useStudySession = (
           throw new Error("Failed to fetch flashcards");
         const flashcardsData = await flashcardsResponse.json();
 
-        // Handle the paginated response structure
-        const deckFlashcards = Array.isArray(flashcardsData.items)
-          ? flashcardsData.items.filter(
-              (card) => card.deck_id === Number.parseInt(deckId)
-            )
+        // Use items if paginated response, otherwise use direct array
+        const deckFlashcards = Array.isArray(flashcardsData.items) 
+        ? flashcardsData.items 
+        : Array.isArray(flashcardsData) 
+          ? flashcardsData 
           : [];
+      
+      setFlashcards(deckFlashcards);
 
+      //fetch progress after we have flashcards
         setFlashcards(deckFlashcards);
         const progressResponse = await fetch(
           `${API_URL}/progress/deck/${deckId}`,
@@ -116,7 +123,7 @@ export const useStudySession = (
         if (!response.ok) throw new Error("Failed to update progress");
 
         // Track answered card
-        setAnsweredCards((prev) => new Set(prev).add(currentFlashcardIndex));
+        setAnsweredCards((prev) => new Set(prev).add(currentFlashcard.id));
 
         setSessionStats((prev) => ({
           ...prev,
