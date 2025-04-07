@@ -19,7 +19,7 @@ export const fetchDeckAndFlashcards = async (
   const deckData = await deckResponse.json();
 
   const cardsResponse = await fetch(
-    `${API_URL}/flashcards?page=${page}&per_page=${perPage}`,
+    `${API_URL}/flashcards?deck_id=${deckId}&page=${page}&per_page=${perPage}`,
     {
       headers: { Authorization: `Bearer ${token}` },
     }
@@ -51,9 +51,7 @@ export const fetchDeckAndFlashcards = async (
     };
   }
 
-  const flashcardsData = cardsData.items.filter(
-    (card) => card.deck_id === Number.parseInt(deckId)
-  );
+const flashcardsData = Array.isArray(cardsData.items) ? cardsData.items : [];
 
   return {
     deckData,
