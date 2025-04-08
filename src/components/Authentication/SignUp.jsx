@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { Formik, Form } from "formik";
@@ -14,8 +15,11 @@ import {
   Link,
   Box,
   Alert,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
 import { motion } from "framer-motion";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import ThemeToggle from "../ThemeComponents/ThemeToggle";
 
 const validationSchema = Yup.object({
@@ -24,15 +28,24 @@ const validationSchema = Yup.object({
     .required("Email is required"),
   username: Yup.string()
     .min(3, "Username must be at least 3 characters")
+    .max(50, "Username must be at most 50 characters")
     .required("Username is required"),
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")
     .required("Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required('Password confirmation is required'),
 });
 
 const Signup = () => {
   const { signup } = useUser();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
 
   return (
     <Container
@@ -89,7 +102,12 @@ const Signup = () => {
             </Box>
 
             <Formik
-              initialValues={{ email: "", username: "", password: "" }}
+              initialValues={{ 
+                email: "", 
+                username: "", 
+                password: "",
+                confirmPassword: "" 
+              }}
               validationSchema={validationSchema}
               onSubmit={async (values, { setSubmitting, setErrors }) => {
                 try {
@@ -102,7 +120,14 @@ const Signup = () => {
                     navigate("/dashboard");
                   }
                 } catch (error) {
-                  setErrors({ general: error.message || "Signup failed" });
+                  // Handle specific backend errors
+                  if (error.message.includes("Username already exists")) {
+                    setErrors({ username: error.message });
+                  } else if (error.message.includes("Email already exists")) {
+                    setErrors({ email: error.message });
+                  } else {
+                    setErrors({ general: error.message || "Signup failed" });
+                  }
                 }
                 setSubmitting(false);
               }}
@@ -153,13 +178,53 @@ const Signup = () => {
                     id="password"
                     name="password"
                     label="Password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={values.password}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={touched.password && Boolean(errors.password)}
                     helperText={touched.password && errors.password}
+                    sx={{ mb: 2 }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    label="Confirm Password"
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={values.confirmPassword}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.confirmPassword && Boolean(errors.confirmPassword)}
+                    helperText={touched.confirmPassword && errors.confirmPassword}
                     sx={{ mb: 3 }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle confirm password visibility"
+                            onClick={handleClickShowConfirmPassword}
+                            edge="end"
+                          >
+                            {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
 
                   <Button

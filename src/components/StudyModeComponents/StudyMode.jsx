@@ -36,7 +36,6 @@ const StudyMode = () => {
     showSummary,
     setShowSummary,
     handleFlashcardResponse,
-    handleMarkAsLearned,
     getCardProgress,
     answeredCards,
     handleFinishSession,
@@ -179,7 +178,6 @@ const StudyMode = () => {
           startTimeRef={startTimeRef}
           handleFlashcardResponse={handleFlashcardResponse}
           cardProgress={cardProgress}
-          handleMarkAsLearned={handleMarkAsLearned}
           handleFinishSession={handleFinishSession}
           isCurrentCardAnswered={isCurrentCardAnswered()}
         />

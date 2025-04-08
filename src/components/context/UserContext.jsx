@@ -47,13 +47,29 @@ export const UserProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, username, password }),
       });
+      // Handle network errors (response never received)
+     if (!response) {
+        throw new Error("Network error - please check your connection");
+      }
 
-      if (!response.ok) throw new Error("Signup failed");
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Handle specific error cases
+        if (data.error === 'username_exists') {
+          throw new Error(data.message);
+        } else if (data.error === 'email_exists') {
+          throw new Error(data.message);
+        } else {
+          throw new Error(data.error || 'Signup failed');
+        }
+      }
 
       const success = await login(email, password);
       return success;
     } catch (error) {
       console.error("Signup error:", error);
+      throw error;
     }
   };
 

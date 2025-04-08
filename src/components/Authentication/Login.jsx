@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { Formik, Form } from "formik";
@@ -14,8 +15,11 @@ import {
   Link,
   Box,
   Alert,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
 import { motion } from "framer-motion";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import ThemeToggle from "../ThemeComponents/ThemeToggle";
 
 const validationSchema = Yup.object({
@@ -30,6 +34,9 @@ const validationSchema = Yup.object({
 const Login = () => {
   const { login } = useUser();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   return (
     <Container
@@ -133,13 +140,26 @@ const Login = () => {
                     id="password"
                     name="password"
                     label="Password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={values.password}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={touched.password && Boolean(errors.password)}
                     helperText={touched.password && values.password === "" ? errors.password : ""}
                     sx={{ mb: 3 }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
 
                   <Button

@@ -18,7 +18,6 @@ const StudyActions = ({
   startTimeRef,
   handleFlashcardResponse,
   cardProgress,
-  handleMarkAsLearned,
   handleFinishSession,
   isCurrentCardAnswered,
 }) => {
@@ -86,22 +85,6 @@ const StudyActions = ({
                     Correct
                   </Button>
                 </Tooltip>
-                {cardProgress && !cardProgress.is_learned && (
-                  <Tooltip title="Mark as learned">
-                    <Button
-                      variant="outlined"
-                      size="large"
-                      onClick={handleMarkAsLearned}
-                      startIcon={<Trophy size={20} />}
-                      sx={{
-                        minWidth: 160,
-                        py: 1.5,
-                      }}
-                    >
-                      Learned
-                    </Button>
-                  </Tooltip>
-                )}
               </>
             ) : (
               <Button

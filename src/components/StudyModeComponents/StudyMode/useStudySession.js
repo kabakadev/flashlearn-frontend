@@ -56,9 +56,6 @@ export const useStudySession = (
           : [];
       
       setFlashcards(deckFlashcards);
-
-      //fetch progress after we have flashcards
-        setFlashcards(deckFlashcards);
         const progressResponse = await fetch(
           `${API_URL}/progress/deck/${deckId}`,
           {
@@ -102,6 +99,10 @@ export const useStudySession = (
   const handleFlashcardResponse = useCallback(
     async (wasCorrect) => {
       const currentFlashcard = flashcards[currentFlashcardIndex];
+      if (!currentFlashcard) { 
+        console.error("No current flashcard found");
+        return;
+      }
       const timeSpent = (Date.now() - startTimeRef.current) / 60000; // Convert to minutes
 
       try {
@@ -148,65 +149,6 @@ export const useStudySession = (
     setShowSummary(true);
   }, [sessionStartTimeRef]);
 
-  const handleMarkAsLearned = useCallback(async () => {
-    const currentFlashcard = flashcards[currentFlashcardIndex];
-
-    try {
-      const token = localStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/progress`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          deck_id: Number.parseInt(deckId),
-          flashcard_id: currentFlashcard.id,
-          was_correct: true,
-          time_spent: 0,
-          is_learned: true,
-        }),
-      });
-
-      if (!response.ok) throw new Error("Failed to update progress");
-      setProgress((prevProgress) => {
-        const updatedProgress = [...prevProgress];
-        const index = updatedProgress.findIndex(
-          (p) => p.flashcard_id === currentFlashcard.id
-        );
-
-        if (index !== -1) {
-          updatedProgress[index] = {
-            ...updatedProgress[index],
-            is_learned: true,
-            review_status: "mastered",
-          };
-        } else {
-          updatedProgress.push({
-            flashcard_id: currentFlashcard.id,
-            deck_id: Number.parseInt(deckId),
-            is_learned: true,
-            review_status: "mastered",
-            study_count: 1,
-            correct_attempts: 1,
-            incorrect_attempts: 0,
-          });
-        }
-
-        return updatedProgress;
-      });
-
-      // Update session stats
-      setSessionStats((prev) => ({
-        ...prev,
-        cardsLearned: prev.cardsLearned + 1,
-      }));
-    } catch (error) {
-      console.error("Error marking card as learned:", error);
-      setError("Failed to mark card as learned. Please try again.");
-    }
-  }, [API_URL, currentFlashcardIndex, deckId, flashcards]);
-
   return {
     deck,
     flashcards,
@@ -222,7 +164,6 @@ export const useStudySession = (
     showSummary,
     setShowSummary,
     handleFlashcardResponse,
-    handleMarkAsLearned,
     getCardProgress,
     answeredCards,
     handleFinishSession,
