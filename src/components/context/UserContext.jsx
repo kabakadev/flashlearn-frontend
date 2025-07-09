@@ -48,7 +48,7 @@ export const UserProvider = ({ children }) => {
         body: JSON.stringify({ email, username, password }),
       });
       // Handle network errors (response never received)
-     if (!response) {
+      if (!response) {
         throw new Error("Network error - please check your connection");
       }
 
@@ -56,12 +56,12 @@ export const UserProvider = ({ children }) => {
 
       if (!response.ok) {
         // Handle specific error cases
-        if (data.error === 'username_exists') {
+        if (data.error === "username_exists") {
           throw new Error(data.message);
-        } else if (data.error === 'email_exists') {
+        } else if (data.error === "email_exists") {
           throw new Error(data.message);
         } else {
-          throw new Error(data.error || 'Signup failed');
+          throw new Error(data.error || "Signup failed");
         }
       }
 

@@ -29,7 +29,15 @@ const Dashboard = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [decks, setDecks] = useState([]);
   const [progress, setProgress] = useState([]);
-  const [stats, setStats] = useState({});
+  const [stats, setStats] = useState({
+    total_flashcards_studied: 0,
+    weekly_goal: 0,
+    study_streak: 0,
+    mastery_level: 0,
+    cards_mastered: 0,
+    retention_rate: 0,
+    average_study_time: 0,
+  });
   const API_URL = "https://flashlearn-backend-ityf.onrender.com";
 
   useEffect(() => {
@@ -65,22 +73,31 @@ const Dashboard = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         return {
-          weekly_goal: data.weekly_goal,
-          mastery_level: data.mastery_level,
-          study_streak: data.study_streak,
-          focus_score: data.focus_score,
-          retention_rate: data.retention_rate,
-          cards_mastered: data.cards_mastered,
-          minutes_per_day: data.minutes_per_day,
-          accuracy: data.accuracy,
+          weekly_goal: data.weekly_goal || 0,
+          mastery_level: data.mastery_level || 0,
+          study_streak: data.study_streak || 0,
+          focus_score: data.focus_score || 0,
+          retention_rate: data.retention_rate || 0,
+          cards_mastered: data.cards_mastered || 0,
+          minutes_per_day: data.minutes_per_day || 0,
+          accuracy: data.accuracy || 0,
         };
       }
 
       throw new Error("Failed to fetch dashboard data");
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
+      return {
+        weekly_goal: 0,
+        mastery_level: 0,
+        study_streak: 0,
+        focus_score: 0,
+        retention_rate: 0,
+        cards_mastered: 0,
+        minutes_per_day: 0,
+        accuracy: 0,
+      };
     }
   };
 
@@ -104,40 +121,42 @@ const Dashboard = () => {
   };
 
   const calculateStats = (progressData, weekly_goal) => {
+    //Ensure progressData is an array
+    const safeProgressData = Array.isArray(progressData) ? progressData : [];
     const totalAttempts = progressData.reduce(
-      (sum, p) => sum + p.study_count,
+      (sum, p) => sum + (p.study_count || 0),
       0
     );
     const totalCorrect = progressData.reduce(
-      (sum, p) => sum + p.correct_attempts,
+      (sum, p) => sum + (p.correct_attempts || 0),
       0
     );
     const totalStudyTime = progressData.reduce(
-      (sum, p) => sum + p.total_study_time,
+      (sum, p) => sum + (p.total_study_time || 0),
       0
     );
-    const cardsLearned = progressData.filter((p) => p.is_learned).length;
+    const cardsLearned = safeProgressData.filter((p) => p.is_learned).length;
     const cardsStudiedThisWeek = getCardsStudiedThisWeek(progressData);
-    const streak = calculateStudyStreak(progressData);
+    const streak = calculateStudyStreak(safeProgressData);
     const averageStudyTime = calculateAverageStudyTime(
-      progressData,
+      safeProgressData,
       totalStudyTime
     );
 
     setStats({
-      total_flashcards_studied: cardsStudiedThisWeek,
-      weekly_goal: weekly_goal,
-      study_streak: streak,
+      total_flashcards_studied: cardsStudiedThisWeek || 0,
+      weekly_goal: weekly_goal || 0,
+      study_streak: streak || 0,
       mastery_level:
         totalAttempts > 0
           ? Math.round((totalCorrect / totalAttempts) * 100)
           : 0,
-      cards_mastered: cardsLearned,
+      cards_mastered: cardsLearned || 0,
       retention_rate:
         totalAttempts > 0
           ? Math.round((totalCorrect / totalAttempts) * 100)
           : 0,
-      average_study_time: averageStudyTime,
+      average_study_time: averageStudyTime || 0,
     });
   };
 

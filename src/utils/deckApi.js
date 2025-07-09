@@ -51,7 +51,7 @@ export const fetchDeckAndFlashcards = async (
     };
   }
 
-const flashcardsData = Array.isArray(cardsData.items) ? cardsData.items : [];
+  const flashcardsData = Array.isArray(cardsData.items) ? cardsData.items : [];
 
   return {
     deckData,

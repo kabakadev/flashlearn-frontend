@@ -55,7 +55,7 @@ const StudyMode = () => {
       if (e.key === " " || e.key === "Enter") {
         e.preventDefault();
         setShowAnswer(!showAnswer);
-      } 
+      }
       // Right arrow - move to next card or submit correct answer
       else if (e.key === "ArrowRight") {
         if (showAnswer && !isCurrentCardAnswered()) {
@@ -65,7 +65,7 @@ const StudyMode = () => {
           setShowAnswer(false);
           startTimeRef.current = Date.now();
         }
-      } 
+      }
       // Left arrow - move to previous card or submit incorrect answer
       else if (e.key === "ArrowLeft") {
         if (showAnswer && !isCurrentCardAnswered()) {
@@ -75,7 +75,7 @@ const StudyMode = () => {
           setShowAnswer(false);
           startTimeRef.current = Date.now();
         }
-      } 
+      }
       // Number keys for direct response
       else if (showAnswer && !isCurrentCardAnswered()) {
         if (e.key === "1") {

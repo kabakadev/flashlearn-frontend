@@ -12,7 +12,7 @@ import StatsCard from "./StatsCard";
 
 const ProgressCard = ({ stats, theme, isDarkMode }) => {
   const weeklyProgress = Math.round(
-    (stats.total_flashcards_studied / stats.weekly_goal) * 100
+    (stats.total_flashcards_studied / stats.weekly_goal) * 100 || 0
   );
 
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
