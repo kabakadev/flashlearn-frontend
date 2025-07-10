@@ -11,12 +11,17 @@ import { BarChart2, Trophy, Brain, Clock, Target } from "lucide-react";
 import StatsCard from "./StatsCard";
 
 const ProgressCard = ({ stats, theme, isDarkMode }) => {
-  const weeklyProgress = Math.round(
-    (stats.total_flashcards_studied / stats.weekly_goal) * 100 || 0
-  );
-
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  // const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
+  //safe defaults for all values
+  const weeklyGoal = stats?.weekly_goal || 50; // Default to 50 if not set
+  const totalStudied = stats?.total_flashcards_studied || 0;
+
+  const weeklyProgress =
+    weeklyGoal > 0
+      ? Math.min(Math.round((totalStudied / weeklyGoal) * 100), 100)
+      : 0;
 
   return (
     <Card
