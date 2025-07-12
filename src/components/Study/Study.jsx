@@ -10,6 +10,11 @@ import {
   Typography,
   CircularProgress,
   Pagination,
+  Skeleton,
+  Grid,
+  Grid2,
+  Card,
+  CardContent,
 } from "@mui/material";
 import StatsOverview from "./StatsOverview";
 import DecksList from "./DecksList";
@@ -157,18 +162,178 @@ const Study = () => {
   const handleDeckClick = (deckId) => {
     navigate(`/study/${deckId}`);
   };
-
   if (loading || isLoading) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <CircularProgress />
+      <Box sx={{ bgcolor: "background.default", minHeight: "100vh" }}>
+        <NavBar />
+        <Container maxWidth="xl" sx={{ py: 4 }}>
+          {/* Title Skeleton - Matches your h4 styling */}
+          <Skeleton
+            variant="text"
+            width={300}
+            height={48}
+            sx={{
+              mb: 4,
+              fontSize: "2.125rem",
+              lineHeight: 1.235,
+              fontWeight: "bold",
+            }}
+          />
+
+          {/* Stats Overview Skeleton - Matches your 3-column layout */}
+          <Box
+            sx={{
+              mb: 4,
+              p: 3,
+              borderRadius: 2,
+              bgcolor: "background.paper",
+              border: 1,
+              borderColor: "divider",
+            }}
+          >
+            <Grid container spacing={3}>
+              {[...Array(3)].map((_, i) => (
+                <Grid item xs={12} md={4} key={i}>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Skeleton
+                      variant="circular"
+                      width={48}
+                      height={48}
+                      sx={{
+                        bgcolor:
+                          i === 0
+                            ? "primary.light"
+                            : i === 1
+                            ? "secondary.light"
+                            : "primary.light",
+                      }}
+                    />
+                    <Box sx={{ flexGrow: 1 }}>
+                      <Skeleton
+                        variant="text"
+                        width="60%"
+                        height={24}
+                        sx={{ mb: 0.5 }}
+                      />
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
+                        <Skeleton variant="text" width="40%" height={32} />
+                        {i === 0 && (
+                          <Skeleton
+                            variant="rectangular"
+                            width={80}
+                            height={32}
+                            sx={{ borderRadius: 1 }}
+                          />
+                        )}
+                      </Box>
+                    </Box>
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+
+          {/* Decks Title Skeleton - Matches your h5 styling */}
+          <Skeleton
+            variant="text"
+            width={200}
+            height={36}
+            sx={{
+              mb: 3,
+              fontSize: "1.5rem",
+              lineHeight: 1.334,
+              fontWeight: "bold",
+            }}
+          />
+
+          {/* Decks List Skeleton - Matches your card layout exactly */}
+          <Grid container spacing={3}>
+            {[...Array(6)].map((_, i) => (
+              <Grid item xs={12} sm={6} md={4} key={i}>
+                <Card
+                  sx={{
+                    borderRadius: 3,
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <CardContent
+                    sx={{
+                      p: 0,
+                      flexGrow: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    {/* Header */}
+                    <Box sx={{ p: 3, borderBottom: 1, borderColor: "divider" }}>
+                      <Skeleton variant="text" width="80%" height={32} />
+                    </Box>
+
+                    {/* Body */}
+                    <Box sx={{ p: 3, flexGrow: 1 }}>
+                      <Skeleton
+                        variant="text"
+                        width="100%"
+                        height={20}
+                        sx={{ mb: 1 }}
+                      />
+                      <Skeleton
+                        variant="text"
+                        width="90%"
+                        height={20}
+                        sx={{ mb: 2 }}
+                      />
+                      <Skeleton
+                        variant="rectangular"
+                        width={80}
+                        height={32}
+                        sx={{ borderRadius: 16 }}
+                      />
+                    </Box>
+
+                    {/* Footer */}
+                    <Box sx={{ p: 2, borderTop: 1, borderColor: "divider" }}>
+                      <Skeleton
+                        variant="rectangular"
+                        height={40}
+                        sx={{ borderRadius: 2 }}
+                      />
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+
+          {/* Pagination Skeleton */}
+          {totalPages > 1 && (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                mt: { xs: 3, sm: 4 },
+                mb: { xs: 2, sm: 3 },
+              }}
+            >
+              <Skeleton
+                variant="rectangular"
+                width={300}
+                height={40}
+                sx={{
+                  borderRadius: 2,
+                  "& .MuiPaginationItem-root": {
+                    color: "text.primary",
+                  },
+                }}
+              />
+            </Box>
+          )}
+        </Container>
       </Box>
     );
   }
@@ -187,6 +352,7 @@ const Study = () => {
         <StatsOverview
           userStats={userStats}
           onUpdateGoalClick={() => setGoalDialogOpen(true)}
+          isLoading={loading || isLoading}
         />
         <Typography variant="h5" sx={{ mb: 3, fontWeight: "bold" }}>
           Your Decks
@@ -196,6 +362,7 @@ const Study = () => {
           decks={decks}
           onDeckClick={handleDeckClick}
           onCreateDeckClick={() => navigate("/mydecks")}
+          isLoading={loading || isLoading}
         />
 
         {totalPages > 1 && (

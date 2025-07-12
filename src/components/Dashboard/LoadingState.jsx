@@ -27,9 +27,6 @@ const LoadingState = ({ theme }) => (
     >
       <Brain size={40} color={theme.palette.primary.main} />
     </motion.div>
-    <Typography variant="h6" color="text.secondary">
-      Loading your dashboard...
-    </Typography>
   </Box>
 );
 
