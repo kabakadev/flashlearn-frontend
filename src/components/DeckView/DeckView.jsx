@@ -24,6 +24,7 @@ import {
   deleteFlashcard,
 } from "../../utils/deckApi";
 import ConfirmationDialog from "../MyDecks/ConfirmationDialog";
+import LoadingState from "./LoadingState";
 
 const DeckView = () => {
   const { user, isAuthenticated, loading: userLoading } = useUser();
@@ -146,13 +147,21 @@ const DeckView = () => {
     return (
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
+          bgcolor: "background.default",
+          minHeight: "100vh",
+          pb: { xs: 4, sm: 8 },
         }}
       >
-        <CircularProgress />
+        <NavBar />
+        <Container
+          maxWidth="xl"
+          sx={{
+            mt: { xs: 2, sm: 3, md: 4 },
+            px: { xs: 2, sm: 3, md: 4 },
+          }}
+        >
+          <LoadingState />
+        </Container>
       </Box>
     );
   }
