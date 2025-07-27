@@ -8,7 +8,8 @@ import Login from "./components/Authentication/Login";
 import Signup from "./components/Authentication/SignUp";
 import Dashboard from "./components/DashBoard";
 
-import MyDecks from "./components/MyDecks";
+// import MyDecks from "./components/MyDecks";
+import MyDecks from "./components/MyDecks/MyDecks";
 import DeckView from "./components/DeckView/DeckView";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Study from "./components/Study/Study";
