@@ -14,6 +14,7 @@ import DeckCard from "./DeckCard";
 import { motion } from "framer-motion";
 
 const DecksSection = ({ decks, getDeckStats, navigate, theme }) => {
+  console.log("Decks data:", decks);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const containerVariants = {
